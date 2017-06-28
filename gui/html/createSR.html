@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<link rel='shortcut icon' type='image/x-icon' href='../images/favicon.ico' />
+	<title>Traffic Intelligence Server</title>
+	<script src="../libraries/jquery/jquery-2.1.4.js"></script>
+	<script src="../libraries/bootstrap/js/bootstrap.min.js"></script>
+	<script src="../js/get_roles.js"></script>
+	<script src="../js/active_mode_maintenance.js"></script>
+	<script src="../js/get_username.js"></script>
+	<script src="../js/logout.js"></script>
+	<script src="../js/createSR.js"></script>
+	<script src="../js/get_header.js"></script>
+	<link rel="stylesheet" href="../libraries/bootstrap/css/bootstrap.min.css">
+	<link rel="stylesheet" href="../css/header.css">	
+	<link rel="stylesheet" href="../css/basic.css">
+	<link rel="stylesheet" href="../css/footer.css">
+	<link rel="stylesheet" href="../css/login.css">
+	<link rel="stylesheet" href="../css/nhome.css">
+	<link rel="stylesheet" href="../css/maintenance.css">
+	<script src="../js/authenticate.js"></script>
+</head>
+<body onload="fetchusername();">
+<div class="row" id="header">
+  <div class="col-sm-2"><a href="http://www.masstrans.in/" target="_blank"><img src="../images/logo.jpg" style="max-width:100%;max-height:100%;"></a></div>
+<div class="col-sm-8" style="margin-top:10px" id="title"><b><font color="white" size="5em">Highway Traffic Management System</font></b></div>
+   
+  <div class="col-sm-2">&nbsp</div>
+</div>
+
+<div style="text-align:center;margin-top:40px" class="row"> 
+	<div class="col-sm-2" id="left_menu" style="padding-right:50px;padding-left:50px">
+		<ul class="nav nav-pills nav-stacked red" id="menu_bar">
+			<font color="gray">User: </font><font id="usernameGet" color="gray" align="left"></font>
+			
+		</ul>
+	</div> 
+
+	<div class="col-sm-9" id="top_content">
+		<ul class="nav nav-tabs nav-justified">
+  			<!--li><a href="srDashboard.html">Dashboard</a></li-->
+  			<li class="active"><a href="createSR.html">Dashboard</a></li>
+  			<li><a href="existingSR.html">Assigned SR</a></li>
+  			<li><a href="uptimeReport.html">Uptime Report</a></li>
+  			<li><a href="createReportSR.html">SR Report</a></li>
+  			<!--li><a href="maintenanceVMS.html">VMS</a></li-->
+		</ul>
+	</div>
+
+	<div class="col-sm-9 table-responsive">
+	<br>
+
+		<table id="dataTable" width="80%" border="1" align="center">
+
+		<h3> Dashboard </h3>
+
+		<tr>
+			<td> Open SR with Device <img src="../images/offline.png"/></td>
+			<td> Open SR with Device <img src="../images/online.png"/></td>
+			<td> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Closed SR &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+		</tr>
+
+		<tr>
+			<td id="openSRCount" style="font-size: 20px"><a href="../existingSR.html">openSRCount</a></td>
+			<td id="openSROnlineCount" style="font-size: 20px"><a href="../existingSR.html">openSROnlineCount</a></td>
+			<td id="closedSRCount" style="font-size: 20px"><a href="../createReportSR.html">closedSRCount</a></td>
+		</tr>
+
+		</table>
+	
+		<br><br>
+		<form method="post">
+			<table id="dataTable" width="40%" border="0" align="center" style="text-align: left">
+
+			<h3> Create SR</h3>
+				
+				<tr>
+					<td>Module:&nbsp;&nbsp;&nbsp;&nbsp;</td>
+					<td id="text"> 
+						<select id="module" name="module" onchange="populateSCN();"><br>
+							<option value = "VMS">VMS</option>
+							<option value = "MET">MET</option>
+							<option value = "ATCC">ATCC</option>
+							<option value = "CCTV">CCTV</option>
+							<option value = "ECB">ECB</option>
+						</select> 
+					</td>
+				</tr>
+				<tr>
+					<td>SCN:</td>
+					<td id="text"> <select id="device"></select> </td>
+				</tr>
+				<tr>
+					<td>Subject</td>
+					<td id="text"> <input id="subject" type="text"/> </td>
+				</tr>
+				<tr>
+					<td>Details</td>
+					<td id="text"> <textarea rows="4" cols="60" id="details"></textarea> </td>
+				</tr>
+
+	    	</table>
+	    	<br>
+
+	    	<input onClick="createSR();" type="button" class="btn btn-danger" style="background-color:#993232" value="Create SR"/>
+    	</form>
+
+
+	</div>
+</div>
+
+
+<nav class="navbar navbar-fixed-bottom" id="footer">
+	<div class="navbar-header">
+	      <a class="navbar-brand" href="http://www.itspe.co.in/products/traffic-intelligence-server" target="_blank">Powered by Traffic Intelligence Server</a>
+	</div>
+	<a class="navbar-brand navbar-right" href="http://www.itspe.co.in/" target="_blank">
+		Copyrights @ ITS Planners and Engineers
+	</a>
+</nav>
+</body>
+</html>

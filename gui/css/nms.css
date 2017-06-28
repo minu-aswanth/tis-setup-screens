@@ -1,0 +1,39 @@
+body {
+	text-align:center;
+	padding:0;
+	width:100%;
+	/*overflow-x: hidden;*/
+}
+
+#dataTable tr td input{
+	width:100%;
+}
+
+th {
+	text-align: center;
+}
+
+button, optgroup, textarea {
+    color: white;
+}
+
+input,select{
+    color: black;
+}
+
+.pagination>.active>a,
+.pagination>.active>a:focus, 
+.pagination>.active>a:hover, 
+.pagination>.active>span, 
+.pagination>.active>span:focus, 
+.pagination>.active>span:hover{
+	background-color: #800000;
+	border-color: #800000;
+	color:white;
+}
+
+.pagination>li>a,
+.pager li>a:focus, 
+.pager li>a:hover{
+	color:#800000;
+}

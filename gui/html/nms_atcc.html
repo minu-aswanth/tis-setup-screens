@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<link rel='shortcut icon' type='image/x-icon' href='../images/favicon.ico' />
+	<title>Traffic Intelligence Server</title>
+	<script src="../libraries/jquery/jquery-2.1.4.js"></script>
+	<script src="../libraries/bootstrap/js/bootstrap.min.js"></script>
+	<script src="../libraries/jquery/jquery-1.6.4.min.js" type="text/javascript"></script>
+    <script src="../libraries/jquery/jquery-ui.min.js" type="text/javascript"></script>
+	<script src="../js/get_roles.js"></script>
+	<script src="../js/active_mode_nms.js"></script>
+	<script src="../js/get_username.js"></script>
+	<script src="../js/logout.js"></script>
+	<script src="../js/nms_atcc.js"></script>
+	<!--script src="https://cdn.plot.ly/plotly-latest.min.js"></script-->
+	<script src="../libraries/plotly/plotly-latest.min.js" type="text/javascript"></script>
+	<script src="../js/get_header.js"></script>
+	<link rel="stylesheet" href="../libraries/bootstrap/css/bootstrap.min.css">
+	<link rel="stylesheet" href="../css/header.css">	
+	<link rel="stylesheet" href="../css/basic.css">
+	<link rel="stylesheet" href="../css/footer.css">
+	<link rel="stylesheet" href="../css/login.css">
+	<link rel="stylesheet" href="../css/nhome.css">
+	<link rel="stylesheet" href="../css/nms.css">
+	<link rel="stylesheet" href="../libraries/jquery/jquery-ui.css">
+	<script>
+		$( document ).ready(function() {
+        	$(".datepicker").datepicker({ dateFormat: 'dd-mm-yy' });
+		});
+	</script>
+<script src="../js/authenticate.js"></script>
+</head>
+<body onload="fetchusername();">
+<audio id="myAudio">
+	  <source src="../images/alertsound.ogg" type="audio/ogg">
+	  <source src="../images/alertsound.mp3" type="audio/mpeg">
+	</audio>
+<div class="row" id="header">
+  <div class="col-sm-2"><a href="http://www.masstrans.in/" target="_blank"><img src="../images/logo.jpg" style="max-width:100%;max-height:100%;"></a></div>
+<div class="col-sm-8" style="margin-top:10px" id="title"><b><font color="white" size="5em">Highway Traffic Management System</font></b></div>
+   
+  <div class="col-sm-2">&nbsp</div>
+</div>
+
+<div style="text-align:center;margin-top:40px" class="row"> 
+	<div class="col-sm-2" id="left_menu" style="padding-right:50px;padding-left:50px">
+		<ul class="nav nav-pills nav-stacked red" id="menu_bar">
+			<font color="gray">User: </font><font id="usernameGet" color="gray" align="left"></font>
+			
+		</ul>
+	</div> 
+	<div class="col-sm-9" id="top_content">
+		<ul class="nav nav-tabs nav-justified">
+			<li><a href="nms.html">NMS-Setup</a></li>
+			<li><a href="nms_other.html">Additional IPs</a></li>
+			<li><a href="backgroundServices.html">Background Services</a></li>
+  			<li><a href="nms_vms.html">VMS</a></li>
+  			<li><a href="nms_met.html">MET</a></li>
+  			<li class="active"><a href="nms_atcc.html">ATCC</a></li>
+  			<li><a href="nms_cctv.html">CCTV</a></li>
+  			<li><a href="nms_ecb.html">ECB</a></li>
+		</ul>
+	</div>
+	<div class="col-sm-9">
+
+		<br>
+
+		<h4>Generate Report</h4>
+
+		<form method = "post">
+			<table align="center">
+				<tr align="center">
+					<td>From:&nbsp </td>
+					<td><input type="text" id="from" name="from" placeholder = "dd-mm-yyyy" class="form-control datepicker"/></td>
+					<td>&nbsp;</td>
+					<td>To:&nbsp </td>
+					<td><input type="text" id="to" name="to" placeholder = "dd-mm-yyyy" class="form-control datepicker"/></td>
+					<td>&nbsp;</td>
+					<td>Device:&nbsp </td>
+					<td><select id="scns"></select></td>
+					<td>&nbsp;</td>
+					<td>Status:&nbsp </td>
+					<td><select id="status"><option value="all">All</option><option value="1">Online</option><option value="0">Offline</option></select></td>
+					<td>&nbsp;</td>
+				</tr>
+		
+				<tr height="5"></tr>
+				
+			</table>
+			<table align="center">
+			<tr align="center">
+			<td>From Time:&nbsp; </td>
+			<td><input id="fromTime" type="time" class="form-control" style="width:100%"/></td>
+			<td>&nbsp;&nbsp;&nbsp;&nbsp; </td>
+			<td>To Time:&nbsp; </td>
+			<td><input id="toTime" type="time" class="form-control" style="width:100%"/></td>
+			<!-- <td>&nbsp;&nbsp;&nbsp;&nbsp;Order:&nbsp;&nbsp;&nbsp;&nbsp;
+			<input type="radio" name="order" value="ascending" id="asc">Ascending
+			<input type="radio" name="order" value="descending" id="des" checked>Descending
+			</td> -->
+			<td><label for="asc">Ascending</label><input type="radio" name="orderby" value="DESC" id="asc" >&nbsp;&nbsp;<label for="desc">Descending</label><input type="radio" name="orderby" value="ASC" id="desc" checked></td>
+			</tr>
+			</table><br>
+			<input id="createReport" type="button" value="Submit"/>
+			<input id="downloadReport" type="button" value="Download Report"/>
+			<input id="downloadPDF" type="button" value="Download PDF Report"/>
+
+			<br><br>
+
+			<table id="dataTable" width="100%" border="1" align="center" class="table">
+	        	<thead>
+	            	<tr>
+	                	<th bgcolor="#993232">
+	                    	<font color="white">SCN</font>
+	                    </th>
+	                    
+	                    <th bgcolor="#993232">
+	                    	<font color="white">Status</font>
+						</th>
+
+						<th bgcolor="#993232">
+	                    	<font color="white">Last Status Change</font>
+	                    </th>
+	                    
+	                    <th bgcolor="#993232">
+	                    	<font color="white">Last Updated</font>
+	                    </th>
+	                </tr>
+				</thead>
+	            
+	            <tbody id="nms_atcc"></tbody>
+	        </table>
+
+				<table class="table">
+					<div id="myDiv" align="center" style="width: 480px; height: 400px;float:left; width:49%;"></div>
+					<div id="myDivTable" style="width: 480px; height: 400px;float:right; width:49%;"></div>
+					<tbody id="searchResult" class="pagination pagination-centered"></tbody>
+				</table>
+				<div class="col-md-12 text-center">
+		           <ul class="pagination pagination-lg pager" id="myPager"></ul>
+		           <br><br><br><br>
+		       </div>
+
+		</form>	
+	
+		<br>
+
+		
+	</div>
+</div>
+
+<nav class="navbar navbar-fixed-bottom" id="footer">
+	<div class="navbar-header">
+	      <a class="navbar-brand" href="http://www.itspe.co.in/products/traffic-intelligence-server" target="_blank">Powered by Traffic Intelligence Server</a>
+	</div>
+	<a class="navbar-brand navbar-right" href="http://www.itspe.co.in/" target="_blank">
+		Copyrights @ ITS Planners and Engineers
+	</a>
+</nav>
+</body>
+</html>

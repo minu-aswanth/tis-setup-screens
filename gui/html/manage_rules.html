@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<link rel='shortcut icon' type='image/x-icon' href='../images/favicon.ico' />
+	<title>Traffic Intelligence Server</title>
+	<script src="../libraries/jquery/jquery-2.1.4.js"></script>
+	<script src="../libraries/bootstrap/js/bootstrap.min.js"></script>
+	<script src="../js/get_roles.js"></script>
+	<script src="../js/active_mode_rules.js"></script>
+	<script src="../js/get_username.js"></script>
+	<script src="../js/logout.js"></script>
+	<script src="../js/rules.js"></script>
+	<script src="../js/existingRules.js"></script>
+	<script src="../js/get_header.js"></script>
+	<link rel="stylesheet" href="../libraries/bootstrap/css/bootstrap.min.css">
+	<link rel="stylesheet" href="../css/header.css">	
+	<link rel="stylesheet" href="../css/basic.css">
+	<link rel="stylesheet" href="../css/footer.css">
+	<link rel="stylesheet" href="../css/login.css">
+	<link rel="stylesheet" href="../css/nhome.css">
+	<link rel="stylesheet" href="../css/rules.css">
+<script src="../js/authenticate.js"></script>
+</head>
+<body onload="fetchusername();">
+<div class="row" id="header">
+  <div class="col-sm-2"><a href="http://www.masstrans.in/" target="_blank"><img src="../images/logo.jpg" style="max-width:100%;max-height:100%;"></a></div>
+<div class="col-sm-8" style="margin-top:10px" id="title"><b><font color="white" size="5em">Highway Traffic Management System</font></b></div>
+   
+  <div class="col-sm-2">&nbsp</div>
+</div>
+
+<div style="text-align:center;margin-top:40px" class="row"> 
+	<div class="col-sm-2" id="left_menu" style="padding-right:50px;padding-left:50px">
+		<ul class="nav nav-pills nav-stacked red" id="menu_bar">
+			<font color="gray">User: </font><font id="usernameGet" color="gray" align="left"></font>
+			
+		</ul>
+	</div>
+
+	<div class="col-sm-9" id="top_content">
+		<ul class="nav nav-tabs nav-justified">
+			<li><a href="rule_live.html">Live Rules</a></li>
+  			<li class="active"><a href="manage_rules.html">Manage Rules</a></li>
+  			<li><a href="profile_tim.html">Profile Data - TIM</a></li>
+		</ul>
+	</div>
+
+	<div class="col-sm-9 table-responsive">
+	<br>
+
+		<table id="dataTable" width="100%" border="1" align="center" class="table">
+		
+			<input type="button" value="Add New Rule" onclick="openModal()" class="btn btn-danger" style="background-color:#993232"/>&nbsp&nbsp
+			<input type="button" value="Edit Rule Schedule" onclick="openEditModal()" class="editbtn btn btn-danger" style="background-color:#993232"/>&nbsp&nbsp
+			<input type="button" value="Delete Rule" onclick="deleteRow()" class="btn btn-danger" style="background-color:#993232"/>&nbsp&nbsp
+			<!--input type="button" value="Profiles" onclick="profiles()" class="btn btn-danger" style="background-color:#993232"/--> <br><br>
+			<b>Please click on rows below to view and manage rule elements</b><br>
+	 
+	    
+			<thead bgcolor="#993232">
+				<tr>
+					<td bgcolor="#993232" rowspan="2"><font color="white"></td>
+					<td bgcolor="#993232" rowspan="2"><font color="white">Sr. No.</td>
+					<td bgcolor="#993232" rowspan="2"><font color="white">Short Description</td>
+					<td bgcolor="#993232" rowspan="2"><font color="white">Long Description</td>
+					<td bgcolor="#993232" style="display:none;"><font color="white">Row Identifier</td>
+				</tr>
+			</thead>
+			
+			<tbody id="existingRules"></tbody>
+	    
+	    </table>
+    </div>
+</div>
+
+<div class="modal fade" id="myModal" role="dialog">
+	<div class="modal-dialog">
+
+  		<!-- Modal content-->
+  		<div class="modal-content">
+  			<button id="cancelModal" type="submit" class="btn btn-danger btn-default pull-left" data-dismiss="modal">
+  				<span class="glyphicon glyphicon-remove"></span> Cancel
+  			</button>
+    		
+    		<div class="modal-header" style="padding:10px 50px;">
+	  			<h3>Rule Details</h3>
+    		</div>
+    		
+    		<div class="modal-body table-responsive" style="padding:0px 50px;">
+      			<form role="form">
+
+      				<table class="table">
+						<tbody>
+							<tr>
+								<td>Short Description</td>
+								<td colspan="2"> <input id="shortDescription" type="text"/> </td>
+							</tr>
+							<tr>
+								<td>Long Description</td>
+								<td colspan="2"> <input id="longDescription" type="text"/> </td>
+							</tr>
+
+							<tr>
+								<td>Operation Times:</td>
+								<td>From</td>
+								<td>To</td>
+							</tr>
+							<tr>
+								<td>Sunday</td>
+								<td> <input id="OTsundayFrom" type="time"/> </td>
+								<td> <input id="OTsundayTo" type="time"/> </td>
+							</tr>
+							<tr>
+								<td>Monday</td>
+								<td> <input id="OTmondayFrom" type="time"/> </td>
+								<td> <input id="OTmondayTo" type="time"/> </td>
+							</tr>
+							<tr>
+								<td>Tuesday</td>
+								<td> <input id="OTtuesdayFrom" type="time"/> </td>
+								<td> <input id="OTtuesdayTo" type="time"/> </td>
+							</tr>
+							<tr>
+								<td>Wednesday</td>
+								<td> <input id="OTwednesdayFrom" type="time"/> </td>
+								<td> <input id="OTwednesdayTo" type="time"/> </td>
+							</tr>
+							<tr>
+								<td>Thursday</td>
+								<td> <input id="OTthursdayFrom" type="time"/> </td>
+								<td> <input id="OTthursdayTo" type="time"/> </td>
+							</tr>
+							<tr>
+								<td>Friday</td>
+								<td> <input id="OTfridayFrom" type="time"/> </td>
+								<td> <input id="OTfridayTo" type="time"/> </td>
+							</tr>
+							<tr>
+								<td>Saturday</td>
+								<td> <input id="OTsaturdayFrom" type="time"/> </td>
+								<td> <input id="OTsaturdayTo" type="time"/> </td>
+							</tr>
+
+
+						</tbody>
+					</table>
+        
+        			<button type="button" class="btn btn-success btn-block" id="addDevice">Add Rule</button>  
+      			</form>
+    		</div>
+    
+  		</div>
+  
+	</div>
+</div> 
+
+
+<div class="modal fade" id="editModal" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <button id="cancelModal_edit" type="submit" class="btn btn-danger btn-default pull-left" data-dismiss="modal">
+            	<span class="glyphicon glyphicon-remove"></span> Cancel
+            </button>
+            <div class="modal-header" style="padding:10px 50px;">
+	  			<h3>Edit Rule</h3>
+    		</div>
+            <div class="modal-body table-responsive" style="padding:40px 50px;">
+            	<form role="form">
+		        	
+		        	<table class="table">
+						<tbody id="edit_modal_content">
+							<tr>
+								<td>Rule ID</td>
+								<td colspan="2" id="ruleID_modal">ruleId</td>
+							</tr>
+							<tr>
+								<td>Short Description</td>
+								<td colspan="2"> <input id="shortDescription_modal" type="text"/> </td>
+							</tr>
+							<tr>
+								<td>Long Description</td>
+								<td colspan="2"> <input id="longDescription_modal" type="text"/> </td>
+							</tr>
+
+							<tr>
+								<td>Operation Times:</td>
+								<td>From</td>
+								<td>To</td>
+							</tr>
+							<tr>
+								<td>Sunday</td>
+								<td> <input id="OTsundayFrom_modal" type="time"/> </td>
+								<td> <input id="OTsundayTo_modal" type="time"/> </td>
+							</tr>
+							<tr>
+								<td>Monday</td>
+								<td> <input id="OTmondayFrom_modal" type="time"/> </td>
+								<td> <input id="OTmondayTo_modal" type="time"/> </td>
+							</tr>
+							<tr>
+								<td>Tuesday</td>
+								<td> <input id="OTtuesdayFrom_modal" type="time"/> </td>
+								<td> <input id="OTtuesdayTo_modal" type="time"/> </td>
+							</tr>
+							<tr>
+								<td>Wednesday</td>
+								<td> <input id="OTwednesdayFrom_modal" type="time"/> </td>
+								<td> <input id="OTwednesdayTo_modal" type="time"/> </td>
+							</tr>
+							<tr>
+								<td>Thursday</td>
+								<td> <input id="OTthursdayFrom_modal" type="time"/> </td>
+								<td> <input id="OTthursdayTo_modal" type="time"/> </td>
+							</tr>
+							<tr>
+								<td>Friday</td>
+								<td> <input id="OTfridayFrom_modal" type="time"/> </td>
+								<td> <input id="OTfridayTo_modal" type="time"/> </td>
+							</tr>
+							<tr>
+								<td>Saturday</td>
+								<td> <input id="OTsaturdayFrom_modal" type="time"/> </td>
+								<td> <input id="OTsaturdayTo_modal" type="time"/> </td>
+							</tr>
+
+						</tbody>
+					</table>
+					
+					<button type="button" class="btn btn-success btn-block" onclick="editRow();">Save Rule</button>
+
+				</form>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+	
+
+
+<nav class="navbar navbar-fixed-bottom" id="footer">
+	<div class="navbar-header">
+	      <a class="navbar-brand" href="http://www.itspe.co.in/products/traffic-intelligence-server" target="_blank">Powered by Traffic Intelligence Server</a>
+	</div>
+	<a class="navbar-brand navbar-right" href="http://www.itspe.co.in/" target="_blank">
+		Copyrights @ ITS Planners and Engineers
+	</a>
+</nav>
+</body>
+</html>

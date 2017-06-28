@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<link rel='shortcut icon' type='image/x-icon' href='../images/favicon.ico' />
+	<title>Traffic Intelligence Server</title>
+	<script src="../libraries/jquery/jquery-2.1.4.js"></script>
+	<script src="../libraries/bootstrap/js/bootstrap.min.js"></script>
+	<script src="../js/get_roles.js"></script>
+	<script src="../js/active_mode_rules.js"></script>
+	<script src="../js/get_username.js"></script>
+	<script src="../js/logout.js"></script>
+	<script src="../js/authenticate.js"></script>
+	<script src="../js/ui_selects.js"></script>
+	<script src="../js/add_cycle.js"></script>
+	<script src="../js/edit_tim_profile.js"></script>
+	<script src="../js/edit_cycle.js"></script>
+	<script src="../js/delete_cycle.js"></script>
+	<link rel="stylesheet" href="../css/profile_tim.css">
+	<link rel="stylesheet" href="../libraries/bootstrap/css/bootstrap.min.css">
+	<link rel="stylesheet" href="../css/header.css">	
+	<link rel="stylesheet" href="../css/basic.css">
+	<link rel="stylesheet" href="../css/footer.css">
+	<link rel="stylesheet" href="../css/login.css">
+	<link rel="stylesheet" href="../css/nhome.css">
+	<link rel="stylesheet" href="../css/vms.css">
+	<script src="../js/authenticate.js"></script></head>
+	<style>
+		.display_table, .display_table>tbody>tr>td, .display_table>tbody>tr>th, .display_table>tfoot>tr>td, .display_table>tfoot>tr>th, .display_table>thead>tr>td, .display_table>thead>tr>th{
+			border:1px solid black;
+		}
+		.movement{
+			background-color: skyblue;
+    		cursor: pointer;
+		}
+		.movement:hover{
+			background-color: skyblue;
+    		cursor: pointer;
+    		border : 1px solid black;
+		}
+		.btn-danger{
+			background-color: #993232;
+			border-color: #993232;
+		}
+		.btn-danger:hover{
+			background-color: #993232;
+			border-color: #993232;	
+		}
+		.btn-danger:active{
+			background-color: #993232;
+			border-color: #993232;	
+		}
+		select{
+			width: 80%;
+			background-color: white;
+			height: 29px;
+		    border-radius: 3px;
+		    border: 1px solid #CCC;
+		    font-weight: 200;
+		    font-size: 15px;
+		    font-family: Verdana;
+		    box-shadow: 1px 1px 5px #CCC;
+		}
+		input[type="text"]{
+		    width: 80%;
+		}
+		input[type='text']{
+			height: 29px;
+		    border-radius: 3px;
+		    border: 1px solid #CCC;
+		    padding: 8px;
+		    font-weight: 300;
+		    font-size: 15px;
+		    font-family: Verdana;
+		    box-shadow: 1px 1px 5px #CCC;
+		}
+		input[type="number"]{
+		    width: 80%;
+		}
+		input[type='number']{
+			height: 29px;
+		    border-radius: 3px;
+		    border: 1px solid #CCC;
+		    padding: 8px;
+		    font-weight: 300;
+		    font-size: 15px;
+		    font-family: Verdana;
+		    box-shadow: 1px 1px 5px #CCC;
+		}
+		.mod_modal{
+			width: 80%;
+		}
+	</style>
+<body onload="fetchusername();">
+<div class="row" id="header">
+  <div class="col-sm-2"><a href="http://www.masstrans.in/" target="_blank"><img src="../images/logo.jpg" style="max-width:100%;max-height:100%;"></a></div>
+  <div class="col-sm-8" style="margin-top:10px"><b><font color="white" size="5em">Traffic Intelligence Server</font></b></div>
+  <div class="col-sm-2">&nbsp;</div>
+</div>
+
+<div style="text-align:center;margin-top:40px" class="row"> 
+	<div class="col-sm-2" id="left_menu" style="padding-right:50px;padding-left:50px">
+		<ul class="nav nav-pills nav-stacked red" id="menu_bar">
+			<font color="gray">User: </font><font id="usernameGet" color="gray" align="left"></font>
+			<li role="presentation"><a href="home.html">Home</a></li>
+			<li role="presentation"><a href="upload_xml.html">Upload XML</a></li>
+		</ul>
+	</div> 
+	
+	<div class="col-sm-9" id="top_content">
+		<ul class="nav nav-tabs nav-justified">
+			<li><a href="rule_live.html">Live Rules</a></li>
+  			<li><a href="manage_rules.html">Manage Rules</a></li>
+  			<li class="active"><a class="active_tab">Profile Data - TIM</a></li>
+		</ul>
+	</div>
+
+	<div class="col-sm-9 table-responsive">
+		<div class="row">
+		<br><br>
+			<div class="col-sm-3">&nbsp;</div>
+			<div class="col-sm-2"><button type="button" class="btn btn-danger add_profile" onclick="$('#addModal').modal()">Add Cycle</button></div>
+			<div class="col-sm-2"><button type="button" class="btn btn-danger edit_profile">Edit Cycle</button></div>
+			<div class="col-sm-2"><button type="button" class="btn btn-danger delete_profile">Delete Cycle</button></div>
+			<div class="col-sm-3">&nbsp;</div>
+		</div>
+		<br>
+		<div class="row">
+			<table class="table table-responsive table-bordered display_table">
+				<thead>
+				<tr>
+					<td colspan="1" bgcolor="#993232">&nbsp;</td>
+					<td bgcolor="#993232" colspan="2"><font color="white">CycleSCN</font></td>
+					<td bgcolor="#993232" colspan="2"><font color="white">CycleDescription</font></td>
+					<td bgcolor="#993232" colspan="2"><font color="white">SignalSCN</font></td>
+				</tr>
+				</thead>
+				<tbody class="cycles_table">
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<div class="modal fade" id="editModal" role="dialog">
+		<div class="modal-dialog mod_modal">
+			<div class="modal-content">
+				<button id="cancelModal" type="submit" class="btn btn-danger btn-default pull-left" data-dismiss="modal">
+  					<span class="glyphicon glyphicon-remove"></span> Cancel
+  				</button>
+  				<div class="modal-header" style="padding:10px 50px;">
+	  				<h3>Edit Cycle <span class="edit_head"></span><h3>
+    			</div>
+    			<div class="modal-body table-responsive" style="padding:0px 50px;">
+    				<table class="table table-responsive">
+    					<tbody>
+    						<tr>
+    							<td colspan="1"><b>Cycle SCN</b></th>
+    							<td colspan="1" class="cycle_scn"></td>
+    						</tr>
+    						<tr>
+    							<td colspan="1"><b>Cycle Description</b></th>
+    							<td colspan="1" class="cycle_desc"></td>
+    						</tr>
+    						<tr>
+    							<td colspan="1"><b>Signal SCN</b></th>
+    							<td colspan="1" class="signal_scn"></td>
+    						</tr>
+    					</tbody>
+    				</table>
+    				<table class="table table-responsive">
+			    		<tbody class="edit_link_names">
+
+			    		</tbody>
+			    	</table>
+			    	<table class="table table-responsive">
+			    		<tbody>
+			    			<tr>
+			    				<td>Select Stages</td>
+			    				<td><select class="edit_cycle_stages"><option disabled="" selected="" value="" num_links="0">select num stages</option></select></td>
+			    			</tr>
+			    		</tbody>
+			    	</table>
+			    	<table class="table table-responsive">
+			    	<tbody>
+			    		<tr >
+			    			<td colspan="1">Movement</td>
+			    			<td colspan="1"><select class="edit_movement_type"><option disabled="" selected="" value="">select movement</option><option value="1">Vehicle</option><option value="2">Pedestrain</option></select></td>
+			    			<td></td>
+			    			<td colspan="1">Stage</td>
+			    			<td colspan="1"><select class="edit_select_stage"><option disabled="" selected="" value="">select stage</option></select></td>
+			    			<td></td>
+			    			<td colspan="2">From</td>
+			    			<td colspan="2"><select class="edit_from_links"><option disabled="" selected="" value="">select from link</option></select></td>
+			    			<!-- <td colspan="1">To</td>
+			    			<td colspan="1"><select class="edit_to_links"><option disabled="" selected="" value="">select to link</option></select></td> -->
+			    			<td></td>
+			    		</tr>
+			    		<tr>
+			    			<td><button type="button" class="btn btn-danger edit_add_phase">Add Phase</button></td>
+			    		</tr>
+			    	</tbody>
+			    </table>
+			    <table class="table table-responsive">
+			    	<tbody class="edit_phase_info_body">
+
+			    	</tbody>
+			    </table>
+			    <table class="table table-responsive">
+			    	<tbody class="edit_stage_timings">
+
+			    	</tbody>
+			    </table>
+			    <table class="table table-responsive">
+			    	<tbody class="edit_inter_stage_timings">
+
+			    	</tbody>
+			    </table>
+			    <table class="table table-responsive">
+			    	<tbody class="submit">
+			    		<tr>
+			    			<td colspan="1">&nbsp;</td>
+			    			<td colspan="1">&nbsp;</td>
+			    			<td colspan="1">&nbsp;</td>
+			    			<td colspan="1"><button type="button" class="btn btn-danger edit_cycle">Edit Cycle</button></td>
+			    		</tr>
+			    	</tbody>
+			    </table>
+    			</div>
+			</div>
+		</div>
+	</div>
+	<div class="modal fade" id="addModal" role="dialog">
+		<div class="modal-dialog mod_modal">
+
+  		<!-- Modal content-->
+  		<div class="modal-content">
+  			<button id="cancelModal" type="submit" class="btn btn-danger btn-default pull-left" data-dismiss="modal">
+  				<span class="glyphicon glyphicon-remove"></span> Cancel
+  			</button>
+    		<div class="modal-header" style="padding:10px 50px;">
+	  			<h3>Add New Profile<h3>
+    		</div>
+    		<div class="modal-body table-responsive" style="padding:0px 50px;">
+			    <table class="table table-responsive">
+			    	<tbody>
+			    		<tr>
+			    			<td>Cycle SCN</td>
+			    			<td><input type="text" placeholder="Enter SCN of Cycle" class="cycle_scn_field"></td>
+			    		</tr>
+			    		<tr>
+			    			<td>Cycle Description</td>
+			    			<td><input type="text" placeholder="Enter Cycle Description" class="cycle_desc_field"></td>
+			    		</tr>
+			    		<tr>
+			    			<td>Select Signal</td>
+			    			<td><select class="signal_scns"><option disabled="" selected="" value="" num_links="0">select a signal</option></select></td>
+			    		</tr>
+			    	</tbody>
+			    </table>
+			    <table class="table table-responsive">
+			    	<tbody class="link_names">
+			    		<tr>
+			    			<td rowspan="9"><img class="signal_img"></td>
+			    		</tr>
+			    		<tr >
+			    			
+			    		</tr>
+			    	</tbody>
+			    </table>
+			    <table class="table table-responsive">
+			    	<tbody>
+			    		<tr >
+			    			<td>Select Stages</td>
+			    			<td><select class="cycle_stages"><option disabled="" selected="" value="" num_links="0">select num stages</option></select></td>
+			    		</tr>
+			    	</tbody>
+			    </table>
+			    <table class="table table-responsive">
+			    	<tbody>
+			    		<tr >
+			    			<td colspan="1">Movement</td>
+			    			<td colspan="1"><select class="movement_type"><option disabled="" selected="" value="">select movement</option><option value="1">Vehicle</option><option value="2">Pedestrain</option></select></td>
+			    			<td></td>
+			    			<td colspan="1">Stage</td>
+			    			<td colspan="1"><select class="num_stages"><option disabled="" selected="" value="">select stage</option></select></td>
+			    			<td></td>
+			    			<td colspan="2">From</td>
+			    			<td colspan="2"><select class="from_links"><option disabled="" selected="" value="">select a link</option></select></td>
+			    			<!-- <td colspan="1">To</td>
+			    			<td colspan="1"><select class="to_links"><option disabled="" selected="" value="">select to link</option></select></td> -->
+			    			<td></td>
+			    		</tr>
+			    		<tr>
+			    			<td><button type="button" class="btn btn-danger add_phase">Add Phase</button></td>
+			    		</tr>
+			    	</tbody>
+			    </table>
+			    <table class="table table-responsive">
+			    	<tbody class="phase_info_body">
+
+			    	</tbody>
+			    </table>
+			    <table class="table table-responsive">
+			    	<tbody class="stage_timings">
+
+			    	</tbody>
+			    </table>
+			    <table class="table table-responsive">
+			    	<tbody class="inter_stage_timings">
+
+			    	</tbody>
+			    </table>
+			    <table class="table table-responsive">
+			    	<tbody class="submit">
+			    		<tr>
+			    			<td colspan="1">&nbsp;</td>
+			    			<td colspan="1">&nbsp;</td>
+			    			<td colspan="1">&nbsp;</td>
+			    			<td colspan="1"><button type="button" class="btn btn-danger add_cycle">Add Cycle</button></td>
+			    		</tr>
+			    	</tbody>
+			    </table>
+    		</div>
+    
+  		</div>
+	</div>
+
+</div> 
+	</div>
+	</div>
+
+<nav class="navbar navbar-fixed-bottom" id="footer">
+	<div class="navbar-header">
+	      <a class="navbar-brand" href="http://www.itspe.co.in/products/traffic-intelligence-server" target="_blank">Powered by Traffic Intelligence Server</a>
+	</div>
+	<a class="navbar-brand navbar-right" href="http://www.itspe.co.in/" target="_blank">
+		Copyrights @ ITS Planners and Engineers
+	</a>
+</nav>
+</body>
+</html>

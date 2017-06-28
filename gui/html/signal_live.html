@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<link rel='shortcut icon' type='image/x-icon' href='../images/favicon.ico' />
+	<title>Traffic Intelligence Server</title>
+	<script src="../libraries/jquery/jquery-2.1.4.js"></script>
+	<script src="../libraries/bootstrap/js/bootstrap.min.js"></script>
+	<script src="../libraries/jquery/jquery-1.6.4.min.js" type="text/javascript"></script>
+    <script src="../libraries/jquery/jquery-ui.min.js" type="text/javascript"></script>
+	<script src="../js/get_roles.js"></script>
+	<script src="../js/get_username.js"></script>
+	<script src="../js/logout.js"></script>
+	<script src="../js/signal_live.js"></script>
+	<!--script src="https://cdn.plot.ly/plotly-latest.min.js"></script-->
+	<script src="../libraries/plotly/plotly-latest.min.js" type="text/javascript"></script>
+	<script src="../js/authenticate.js"></script>
+	<link rel="stylesheet" href="../libraries/bootstrap/css/bootstrap.min.css">
+	<link rel="stylesheet" href="../css/header.css">	
+	<link rel="stylesheet" href="../css/basic.css">
+	<link rel="stylesheet" href="../css/footer.css">
+	<link rel="stylesheet" href="../css/login.css">
+	<link rel="stylesheet" href="../css/nhome.css">
+	<!--link rel="stylesheet" href="../css/nms.css"-->
+	<link rel="stylesheet" href="../libraries/jquery/jquery-ui.css">
+	<script>
+		$( document ).ready(function() {
+        	$(".datepicker").datepicker({ dateFormat: 'dd-mm-yy' });
+		});
+	</script>
+	<script src="../js/authenticate.js"></script>
+	<!--style>
+		.bottom_space{
+			height: 10vh;
+		}
+		textarea:focus, input:focus, select:focus, input[type="number"]:focus{
+		    border : 1px solid #800000;
+		    outline: none;
+		}
+		tr{
+			text-align: center;
+		}
+		table{
+    		table-layout: fixed;
+    		width:100%;
+    		text-align:center;
+		}
+		textarea{
+			width: 80%;
+		}
+		input[type="text"]{
+			width: 80%;
+		}
+		input[type="number"]{
+			border-radius: 3px;
+			border:1px solid #CCC;
+			box-shadow: 1px 1px 5px #CCC;
+			height: 29px;
+			padding: 8px;
+			width: 80%;
+		}
+		select{
+			width: 80%;
+			background-color: white;
+		}
+		.movement{
+			background-color: skyblue;
+			cursor: pointer;
+		}
+		.movement:hover{
+			border: 1px solid black;
+		}
+		#signal_control{
+			background-color: #993232;
+		}
+		#signal_control>a{
+			color: white;
+		}
+		#signal_control>a:hover{
+			color: #993232;
+		}
+		.btn-danger{
+			background-color: #993232;
+		}
+		table>thead>*>*{
+			color: white;
+			background-color: #993232;
+			border:1px grey solid;
+		}
+		table>tbody>tr>th{
+			color: black;
+			border:1px grey solid;
+		}
+		.signal_table>tbody>tr>td{
+			color: black;
+			border:1px grey solid;
+		}
+		h3{
+		    font-size: 24px;
+		    margin: 0;
+		    margin-bottom: 10px;
+		}
+	</style-->
+	<style type="text/css">
+		#signal_control{
+			background-color: #993232;
+		}
+		#signal_control>a{
+			color: white;
+		}
+		#signal_control>a:hover{
+			color: #993232;
+		}
+	</style>
+</head>
+<body onload="fetchusername();">
+<div class="row" id="header">
+  <div class="col-sm-2"><a href="http://www.masstrans.in/" target="_blank"><img src="../images/logo.jpg" style="max-width:100%;max-height:100%;"></a></div>
+  <div class="col-sm-8" style="margin-top:10px"><b><font color="white" size="5em">Traffic Intelligence Server</font></b></div>
+  <div class="col-sm-2">&nbsp</div>
+</div>
+
+<div style="text-align:center;margin-top:40px" class="row"> 
+	<div class="col-sm-2" id="left_menu" style="padding-right:50px;padding-left:50px">
+		<ul class="nav nav-pills nav-stacked red" id="menu_bar">
+			<font color="gray">User: </font><font id="usernameGet" color="gray" align="left"></font>
+			
+		</ul>
+	</div> 
+	<div class="col-sm-9" id="top_content">
+		<ul class="nav nav-tabs nav-justified">
+                <li><a href="signal_map.html">Map</a></li>
+				<li class="active"><a href="signal_live.html">Live Data</a></li>
+				<li><a href="nms_signal2.html">NMS-Signal</a></li>
+	  			<li><a href="add_signal.html">Add Signal</a></li>
+	  			<li><a href="signal_control.html">Add Signal Group</a></li>
+            </ul>
+	</div>
+	<div class="col-sm-9">
+		<br>
+
+		<form method = "post">
+			<table align="center">
+				<tr align="center">
+					<td>Device:&nbsp </td>
+					<td><select id="scns" onchange="populateLiveInfo()"></select></td>
+				</tr>
+		
+				<tr height="5"></tr>
+				
+			</table>
+	
+			
+			<table id="dataTable" width="100%" border="1" align="center" class="table">
+	        	<thead>
+	            	<tr>
+	                	<th bgcolor="#993232">
+	                    	<font color="white">Stage Order</font>
+	                    </th>
+	                    
+	                    <th bgcolor="#993232">
+	                    	<font color="white">Time</font>
+						</th>
+	                    
+	                    <th bgcolor="#993232">
+	                    	<font color="white">Vehicle Movement</font>
+	                   	</th>
+	                </tr>
+				</thead>
+	            
+	            <tbody id="signal_live"></tbody>
+        	</table>
+
+       </form>	
+
+		<br>
+
+	<img id="linksimage" src="" style="display:none;">
+	<div style="position:relative;margin: 0 auto;width: 250px;display:inline-block;margin-right:5%;">
+	<canvas width="250" id="canvas" height="250" style="border:1px solid #000"></canvas>
+	<canvas width="125" id="canvas2" height="125" style="position:absolute;left:62px;top:62px;"></canvas>
+	</div>
+		
+	<div style="display:inline-block;margin-left:5%;">
+		<table id="linksTable" width="100%" border="1" align="center" class="table">
+	    	<thead>
+	        	<tr>
+	            	<th bgcolor="#993232">
+	                	<font color="white">Link Number</font>
+	                </th>
+	                
+	                <th bgcolor="#993232">
+	                	<font color="white">Link Name</font>
+					</th>
+	            </tr>
+			</thead>
+	        
+	        <tbody id="link_live"></tbody>
+		</table>
+	</div>
+        		
+	</div>
+</div>
+
+<nav class="navbar navbar-fixed-bottom" id="footer">
+	<div class="navbar-header">
+	      <a class="navbar-brand" href="http://www.itspe.co.in/products/traffic-intelligence-server" target="_blank">Powered by Traffic Intelligence Server</a>
+	</div>
+	<a class="navbar-brand navbar-right" href="http://www.itspe.co.in/" target="_blank">
+		Copyrights @ ITS Planners and Engineers
+	</a>
+</nav>
+</body>
+</html>

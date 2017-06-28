@@ -1,0 +1,68 @@
+<br>
+
+							<form method = "post">
+								<table align="center" style="visibility:hidden">
+									<tr align="center">
+										<td>Device:&nbsp </td>
+										<td><select id="scns"></select></td>
+									</tr>
+							
+									<tr height="5"></tr>
+									
+								</table>
+								<div align="center">
+									<select id="signal_mode" onchange="signalModeChange()">
+										<option value="manual">Manual</option>
+										<option value="automatic">Automatic</option>
+										<option value="scheduled">Scheduled</option>
+									</select>
+								</div>
+								
+								<table id="dataTable" width="100%" border="1" align="center" class="table">
+									<thead>
+										<tr>
+											<th bgcolor="#993232">
+												<font color="white">Stage Order</font>
+											</th>
+											
+											<th bgcolor="#993232">
+												<font color="white">Time</font>
+											</th>
+											
+											<th bgcolor="#993232">
+												<font color="white">Vehicle Movement</font>
+											</th>
+										</tr>
+									</thead>
+									
+									<tbody id="signal_live"></tbody>
+								</table>
+
+						   </form>	
+
+							<br>
+
+						<img id="linksimage" src="" style="display:none;">
+						
+							<div class="" style="position:relative;margin: 0 auto;width: 250px;display:inline-block;margin-right:5%;">
+							<canvas width="250" id="canvas" height="250" style="border:1px solid #000"></canvas>
+							<canvas width="125" id="canvas2" height="125" style="position:absolute;left:62px;top:62px;"></canvas>
+							</div>
+								
+							<div class="" style="display:inline-block;margin-left:5%;">
+								<table id="linksTable" border="1" align="center" class="table">
+									<thead>
+										<tr>
+											<th bgcolor="#993232">
+												<font color="white">Link Number</font>
+											</th>
+											
+											<th bgcolor="#993232">
+												<font color="white">Link Name</font>
+											</th>
+										</tr>
+									</thead>
+									
+									<tbody id="link_live"></tbody>
+								</table>
+							</div>

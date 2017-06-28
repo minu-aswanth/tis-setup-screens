@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<link rel='shortcut icon' type='image/x-icon' href='../images/favicon.ico' />
+	<title>Traffic Intelligence Server</title>
+	<script src="../libraries/jquery/jquery-2.1.4.js"></script>
+	<script src="../libraries/bootstrap/js/bootstrap.min.js"></script>
+	<script src="../js/get_roles.js"></script>
+	<script src="../js/active_mode_rules.js"></script>
+	<script src="../js/get_username.js"></script>
+    <script src="../js/logout.js"></script>
+	<script src="../js/rule_details.js"></script>
+	<script src="../js/rule_modals.js"></script>
+    <script src="../js/rule_elements.js"></script>
+	<script src="../js/get_header.js"></script>
+    <script src="../js/new_ruledetails.js"></script>
+	<link rel="stylesheet" href="../libraries/bootstrap/css/bootstrap.min.css">
+	<link rel="stylesheet" href="../css/header.css">	
+	<link rel="stylesheet" href="../css/basic.css">
+	<link rel="stylesheet" href="../css/footer.css">
+	<link rel="stylesheet" href="../css/login.css">
+	<link rel="stylesheet" href="../css/nhome.css">
+	<link rel="stylesheet" href="../css/rules.css">
+<script src="../js/authenticate.js"></script>
+</head>
+<body onload="fetchusername();">
+<div class="row" id="header">
+  <div class="col-sm-2"><a href="http://www.masstrans.in/" target="_blank"><img src="../images/logo.jpg" style="max-width:100%;max-height:100%;"></a></div>
+<div class="col-sm-8" style="margin-top:10px" id="title"><b><font color="white" size="5em">Highway Traffic Management System</font></b></div>
+   
+  <div class="col-sm-2">&nbsp</div>
+</div>
+
+<div style="text-align:center;margin-top:40px" class="row"> 
+	<div class="col-sm-2" id="left_menu" style="padding-right:50px;padding-left:50px">
+		<ul class="nav nav-pills nav-stacked red" id="menu_bar">
+			<font color="gray">User: </font><font id="usernameGet" color="gray" align="left"></font>
+			
+		</ul>
+	</div>
+
+    <div class="col-sm-9" id="top_content">
+        <ul class="nav nav-tabs nav-justified">
+            <li><a href="rule_live.html">Live Rules</a></li>
+            <li class="active"><a href="manage_rules.html">Rules</a></li>
+            <li><a href="profile_met.html">Profile Data - MET</a></li>
+            <li><a href="profile_atcc.html">Profile Data - ATCC</a></li>
+            <li><a href="profile_tim.html">Profile Data - TIM</a></li>
+        </ul>
+    </div>
+    
+	<div class="col-sm-9 table-responsive">
+	<br>
+
+		<table id="dataTable" width="100%" border="1" align="center" class="table">
+	
+			<div class="modal-body table-responsive" style="padding:0px 50px;">
+		        
+				<table width="100%" style="float: center" border="2px">
+
+					<tr>
+						<td bgcolor="#993232" rowspan="2"><font color="white">Rule ID</td>
+						<td bgcolor="#993232" rowspan="2"><font color="white">Short Description</td>
+						<td bgcolor="#993232" rowspan="2"><font color="white">Long Description</td>
+					</tr>
+
+					<tbody id="ruleDetails"></tbody>
+
+				</table>
+				<table width="100%" border="2px">
+
+                    <tbody id="ruleTimingDetails"></tbody>
+
+		  		</table>
+
+		  		<table width="50%" style="float: left" border="2px">
+		    		<tr>
+		      			<td colspan="7"><h4>Rule Elements</h4></td>
+		    		</tr>
+		    		<tr>
+		    			<td colspan="7">
+		    				<input type="button" value="Add Element" onclick="openElementModal()" class="btn-danger" style="background-color:#993232"/>&nbsp&nbsp
+							<input type="button" value="Edit Element" onclick="openEditElementModal()" class="editbtn btn-danger" style="background-color:#993232"/>&nbsp&nbsp
+							<input type="button" value="Delete Element" onclick="deleteElementRow()" class="btn-danger" style="background-color:#993232"/>
+						</td>
+		    		</tr>
+
+		    		<tr>
+		    			<td bgcolor="#993232">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+		    			<td bgcolor="#993232"><font color="white">Element ID</font></td>
+		    			<td bgcolor="#993232"><font color="white">Module</font></td>
+		    			<td bgcolor="#993232"><font color="white">SCN</font></td>
+		    			<td bgcolor="#993232"><font color="white">Variable</font></td>
+		    			<td bgcolor="#993232"><font color="white">Profile ID</font></td>
+		    			<td bgcolor="#993232"><font color="white">Bound</font></td>
+					</tr>
+					<tbody id="rule_elements">
+					
+		  		</table>
+
+		  		<table width="50%" style="float: left" border="2px">
+		    		<tr>
+		      			<td colspan="6"><h4>Rule Actions</h4></td>
+		    		</tr>
+
+		    		<tr>
+		    			<td colspan="6">
+		    				<input type="button" value="Add Action" onclick="openActionModal()" class="btn-danger" style="background-color:#993232"/>&nbsp&nbsp
+							<input type="button" value="Edit Action" onclick="openEditActionModal()" class="editbtn btn-danger" style="background-color:#993232"/>&nbsp&nbsp
+							<input type="button" value="Delete Action" onclick="deleteActionRow()" class="btn-danger" style="background-color:#993232"/>
+						</td>
+		    		</tr>
+
+		    		<tr>
+		    			<td bgcolor="#993232">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+		    			<td bgcolor="#993232"><font color="white">Action ID</font></td>
+                        <td bgcolor="#993232"><font color="white">Message</font></td>
+		    			<td bgcolor="#993232"><font color="white">Action</font></td>
+		    			<td bgcolor="#993232"><font color="white">Device</font></td>
+                        <td bgcolor="#993232"><font color="white">Slide</font></td>
+		    		</tr>
+
+		    		<tbody id="rule_actions">
+					
+		  		</table>
+
+		        
+		    </div>
+    
+		</table>
+
+    </div>
+</div>
+
+
+<div class="modal fade" id="myElementModal" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <button id="cancelElementModal" type="submit" class="btn btn-danger btn-default pull-left" data-dismiss="modal">
+                <span class="glyphicon glyphicon-remove"></span> Cancel
+            </button>
+            <div class="modal-header" style="padding:10px 50px;">
+                <h3>Add New Element</h3>
+            </div>
+            <div class="modal-body table-responsive" style="padding:0px 50px;">
+                <form role="form">
+                    <table class="table">
+                        <tbody>
+                            <tr>
+                                <td>Module</td>
+                                <td>
+                                    <select name="module" id="module" onchange="populateSCN();">
+                                        <option value=""></option>
+                                        <option value="MET">MET</option>
+                                        <option value="ATCC">ATCC</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>SCN</td>
+                                <td>
+                                    <!--select id="scn" name="scn"-->
+                                    <select id="scn"></select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Variable</td>
+                                <td colspan="2"><select name="variable" id="variable"></select></td>
+                            </tr>
+                            <tr>
+                                <td>Profile ID</td>
+                                <td>
+                                    <!--input id="profileID" type="text"/-->
+                                    <select id="profileID"></select>
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td>Bound</td>
+                                <td>
+                                    <select name="bound" id="bound">
+                                        <option value=""></option>
+                                        <option value="1">Upper Bound</option>
+                                        <option value="-1">Lower Bound</option>
+                                        <option value="0">In Between</option>
+                                    </select>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <button type="button" class="btn btn-success btn-block" onclick="addElement();">
+                    Add Element
+                	</button>
+           		</form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="editElementModal" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <button id="cancelElementModal_edit" type="submit" class="btn btn-danger btn-default pull-left" data-dismiss="modal">
+                <span class="glyphicon glyphicon-remove"></span> Cancel
+            </button>
+            <div class="modal-header" style="padding:10px 50px;">
+                <h3>Edit Element</h3>
+            </div>
+            <div class="modal-body table-responsive" style="padding:40px 50px;">
+                <form role="form">
+                    <table class="table">
+                        <tbody id="edit_modal_content">
+                            <tr>
+                                <td>Element ID</td>
+                                <td id="elementID_modal">elementID</td>
+                            </tr>
+                            <tr>
+                                <td>Module</td>
+                                <td><!--input id="module_modal" type="text"/-->
+                                    <select name="module_modal" id="module_modal">
+                                            <option value=""></option>
+                                            <option value="MET">MET</option>
+                                            <option value="ATCC">ATCC</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>SCN</td>
+                                <td>
+                                    <input id="scn_modal" type="text"/>
+                                    <!--select id="scnList_modal"></select-->
+                                </td>
+                                <!--td colspan="2"><select name="scn_modal" id="scn_modal"></select></td-->
+                            </tr>
+                            <tr>
+                                <td>Variable</td>
+                                <td>
+                                    <input id="variable_modal" type="text"/>
+                                    <!--select name="variable_modal" id="variable"></select-->
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Profile ID</td>
+                                <td>
+                                    <input id="profileID_modal" type="text"/>
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td>Bound</td>
+                                <td>
+                                    <input id="bound_modal" type="text"/>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <button type="button" class="btn btn-success btn-block" onclick="editElementRow();">
+                    	Edit Element
+                	</button>
+            	</form>
+        	</div>
+		</div>
+    </div>
+</div>
+
+
+
+
+<div class="modal fade" id="myActionModal" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <button id="cancelActionModal" type="submit" class="btn btn-danger btn-default pull-left" data-dismiss="modal">
+                <span class="glyphicon glyphicon-remove"></span> Cancel
+            </button>
+            <div class="modal-header" style="padding:10px 50px;">
+                <h3>Add New Action</h3>
+            </div>
+            <div class="modal-body table-responsive" style="padding:0px 50px;">
+                <form role="form">
+                    <table class="table">
+                        <tbody>
+                            <tr>
+                                <td>Action</td>
+                                <td>
+                                    <select id="action" type="text">
+                                        <option id="vms">VMS</option>
+                                        <option id="tim">TIM</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Message</td>
+                                <td>
+                                    <!--input id="message" type="text"/-->
+                                    <select id="message"></select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Device</td>
+                                <td>
+                                    <!--input id="device" type="text"/-->
+                                    <select id="device"></select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Slide</td>
+                                <td>
+                                    <!--input id="device" type="text"/-->
+                                    <select id="slide">
+                                        <option value="0">Slide Number</option>
+                                        <option value="13">13</option>
+                                        <option value="14">14</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Cycles</td>
+                                <td>
+                                    <!--input id="message" type="text"/-->
+                                    <select id="cycles"></select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>SignalSCN</td>
+                                <td id="signal_scn_populate">
+
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <button type="button" class="btn btn-success btn-block" id="addAction">
+                    Add Action
+                	</button>
+                    <button type="button" class="btn btn-success btn-block" id="addAction_tim">
+                    Add Action
+                    </button>
+           		</form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="editActionModal" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <button id="cancelActionModal_edit" type="submit" class="btn btn-danger btn-default pull-left" data-dismiss="modal">
+                <span class="glyphicon glyphicon-remove"></span> Cancel
+            </button>
+            <div class="modal-header" style="padding:10px 50px;">
+                <h3>Edit Action</h3>
+            </div>
+            <div class="modal-body table-responsive" style="padding:40px 50px;">
+                <form role="form">
+                    <table class="table">
+                        <tbody id="edit_modal_content">
+                            <tr>
+                                <td>Action ID</td>
+                                <td id="actionID_modal">actionID</td>
+                            </tr>
+                            <tr>
+                                <td>Message</td>
+                                <td><!--input id="message_modal" type="text"/--><select id="message_modal"></select></td>
+                            </tr>
+                            <tr>
+                                <td>Action</td>
+                                <td>
+                                    <!--input id="action_modal" type="text"/-->
+                                    <select id="action_modal" type="text">
+                                        <option id="vms">VMS</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Device</td>
+                                <td>
+                                    <!--input id="device_modal" type="text"/-->
+                                    <select id="device_modal"></select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Slide</td>
+                                <td>
+                                    <select id="slide_modal">
+                                        <option value="0">Slide Number</option>
+                                        <option value="13">13</option>
+                                        <option value="14">14</option>
+                                    </select>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <button type="button" class="btn btn-success btn-block" onclick="editActionRow();">
+                    	Edit Action
+                	</button>
+            	</form>
+        	</div>
+		</div>
+    </div>
+</div>
+
+
+
+<nav class="navbar navbar-fixed-bottom" id="footer">
+	<div class="navbar-header">
+	      <a class="navbar-brand" href="http://www.itspe.co.in/products/traffic-intelligence-server" target="_blank">Powered by Traffic Intelligence Server</a>
+	</div>
+	<a class="navbar-brand navbar-right" href="http://www.itspe.co.in/" target="_blank">
+		Copyrights @ ITS Planners and Engineers
+	</a>
+</nav>
+</body>
+</html>

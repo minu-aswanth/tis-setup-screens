@@ -1,0 +1,13 @@
+.nav-pills>li.active>a, .nav-pills>li.active>a:focus, .nav-pills>li.active>a:hover{
+background-color:#993232;
+}
+
+a{
+color:#800000;
+}
+li{
+background-color:#cc9999;
+}
+.leaflet-control-container .leaflet-routing-container-hide {
+    margin-right: -3400px;
+}

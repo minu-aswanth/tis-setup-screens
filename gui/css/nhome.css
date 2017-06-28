@@ -1,0 +1,16 @@
+.nav-pills>li.active>a, .nav-pills>li.active>a:focus, .nav-pills>li.active>a:hover{
+background-color:#993232;
+}
+.nav-tabs > li.active > a{
+color:#ffffff
+}
+.nav-tabs>li.active>a, .nav-tabs>li.active>a:focus, .nav-pills>li.active>a:hover{
+background-color:#993232;
+}
+
+a{
+color:#800000;
+}
+li{
+background-color:#cc9999;
+}

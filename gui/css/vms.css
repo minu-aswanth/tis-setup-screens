@@ -1,0 +1,42 @@
+#dataTable tr td input{
+	width:100%;
+}
+
+th {
+	text-align: center;
+}
+
+.table-responsive{
+	overflow-x:visible;
+}
+
+textarea{ 
+  width: 200px; 
+  min-width:200px; 
+  max-width:200px; 
+
+  height:200px; 
+  min-height:200px;  
+  max-height:200px;
+}
+
+.pagination>.active>a,
+.pagination>.active>a:focus, 
+.pagination>.active>a:hover, 
+.pagination>.active>span, 
+.pagination>.active>span:focus, 
+.pagination>.active>span:hover{
+	background-color: #800000;
+	border-color: #800000;
+	color:white;
+}
+
+.pagination>li>a,
+.pager li>a:focus, 
+.pager li>a:hover{
+	color:#800000;
+}
+
+.leaflet-control-container .leaflet-routing-container-hide {
+    margin-right: -3400px;
+}
