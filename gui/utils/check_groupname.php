@@ -4,9 +4,10 @@ include 'dblinker.php';
 
 function get_groupname_status(){
 	try {
-		$group_name = $_POST['group_name'];
+		$group_scn = $_POST['group_scn'];
 		$link = linkToTIS();
-		$handle=$link->prepare("SELECT count(*) as count FROM `utmc_traffic_signal_groups` WHERE `GroupName`='$group_name'");
+		$handle=$link->prepare("SELECT count(*) as count FROM `groups` WHERE `SCN`=':group_scn'");
+		$handle->bindParam(':group_scn', $group_scn);
 		$handle->execute();
 		$result=$handle->fetch(PDO::FETCH_ASSOC);
 		$count = (int) $result['count'];
