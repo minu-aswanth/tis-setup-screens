@@ -149,11 +149,12 @@
 	</div>
 	<div class="col-sm-9" id="top_content" style="padding-top:5vh">
 		<div class="row">
-			<div class="col-sm-3">&nbsp;</div>
+			<div class="col-sm-2">&nbsp;</div>
 			<div class="col-sm-2"><button class="btn btn-danger add_group_modal" onclick='$("#add_modal").modal()'>Add Group</button></div>
 			<div class="col-sm-2"><button class="btn btn-danger update_group_modal" onclick=update_modal()>Update Group</button></div>
 			<div class="col-sm-2"><button class="btn btn-danger delete_group_modal" onclick=delete_modal()>Delete Group</button></div>
-			<div class="col-sm-3">&nbsp;</div>
+			<div class="col-sm-2"><button class="btn btn-danger" onclick="goToGroupDetailsPage()">Get Details</button></div>
+			<div class="col-sm-2">&nbsp;</div>
 		</div>
 	</div>
 	<div class="col-sm-9" style="padding-top:8vh;">
@@ -164,6 +165,7 @@
 					<th colspan="2">Sr No.</th>
 					<th colspan="4">Group Name</th>
 					<th colspan="4">Group SCN</th>
+					<th colspan="4">Group Description</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -249,15 +251,15 @@
 						<tbody class="update_info">
 							<tr>
 								<td colspan="1">Group SCN</td>
-								<td colspan="1" class="group_scn_update"></td>
+								<td colspan="1"><input class="group_scn_update" disabled></td>
 							</tr>
 							<tr>
 								<td colspan="1">Group Name</td>
-								<td colspan="1"><select class="group_name_update"></select></td>
+								<td colspan="1"><input class="group_name_update"></td>
 							</tr>
 							<tr>
 								<td colspan="1">Group Description</td>
-								<td colspan="1"><select class="group_description_update"></select></td>
+								<td colspan="1"><input class="group_description_update"></td>
 							</tr>
 						</tbody>
 					</table>
