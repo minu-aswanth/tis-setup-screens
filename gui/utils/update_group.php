@@ -8,7 +8,7 @@ function update_group(){
 		$group_description = $_POST['group_description'];
 		$group_scn = $_POST['group_scn'];
 		$link = linkToTIS();
-		$handle=$link->prepare("UPDATE `groups` SET `Name`=group_name,`Description`=group_description WHERE `SCN`=:group_scn");
+		$handle=$link->prepare("UPDATE `groups` SET `Name`= :group_name,`Description`= :group_description WHERE `SCN`=:group_scn");
 		$handle->bindParam(':group_scn', $group_scn);
 		$handle->bindParam(':group_name', $group_name);
 		$handle->bindParam(':group_description', $group_description);
