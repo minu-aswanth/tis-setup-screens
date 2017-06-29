@@ -15,6 +15,19 @@ $(document).ready(function() {
 			console.log(addedSignals);
 			for (var i = 0; i < addedSignals.length; i++) {
 				$('.signal_table tbody').append('<tr><td colspan="1"><input type="radio" name="groups"></td><td colspan="2">'+(i+1)+'</td><td colspan="4">'+addedSignals[i].SCN+'</td><td colspan="4">'+addedSignals[i].ShortDescription+'</td></tr>');
+				if(i==0){
+					var divs = '<div id="up_menu'+i+'" class="tab-pane fade active in"><h3>Stage Timings</h3><table class="table table-bordered"><thead><tr><td colspan="1">Stage</td><td colspan="1">Time(in seconds)</td></tr></thead><tbody class="up_stage_timings"></tbody></table></div>'
+					$('.up_tab').append(divs)
+					$('.up_phases_tabs').append('<li class="active"><a data-toggle="pill" signal-id='+ addedSignals[i].SignalID +' href="#up_menu0">'+addedSignals[i].SCN+'</a></li>')
+				}
+				else{
+					var divs = '<div id="up_menu'+i+'" class="tab-pane fade"><h3>Stage Timings</h3><table class="table table-bordered"><thead><tr><td colspan="1">Stage</td><td colspan="1">Time(in seconds)</td></tr></thead><tbody class="up_stage_timings"></tbody></table></div>'
+					$('.up_tab').append(divs)
+					$('.up_phases_tabs').append('<li><a data-toggle="pill" signal-id='+ addedSignals[i].SignalID +' href="#up_menu'+i+'">'+addedSignals[i].SCN+'</a></li>')
+				}
+				for (var j = 1; j <= addedSignals[i].StagesNumber; j++) {
+					$('#up_menu' + i).find('.up_stage_timings').append('<tr><td colspan="1">Stage - '+j+'</td><td colspan="1"><input type="number" placeholder="Enter Stage '+j+' Time" class="up_stage_'+j+'"</td></tr>');		
+				}
 			}
 		}
 	});
@@ -27,7 +40,7 @@ $(document).ready(function() {
 			var signals = $.parseJSON(result);
 			console.log(signals);
 			for (var i = 0; i < signals.length; i++) {
-				$('.signal_scn_select').append('<option value='+ signals[i].SCN +'>'+ signals[i].SCN +'</option>')
+				$('.signal_scn_select').append('<option value='+ signals[i].SCN +'>'+ signals[i].SCN +'</option>')				
 			}
 		}
 	});
@@ -284,6 +297,50 @@ $(document).ready(function() {
 			alert("Please select a timetable to delete");
 		}
 	}
+
+	//adding a new plan
+	$('.add_plan').click(function(){
+		var plan_scn = $(".plan_scn").val();
+		var cycle_time = $(".cycle_time").val();
+		var stages_info = [];
+		var count = 0;
+		$($(".up_phases_tabs").find('a')).each(function(){
+			console.log($(this).attr("signal-id"));
+			var signal_scn = this.innerHTML;
+			var signal_id = $(this).attr("signal-id");
+			var obj = {};
+			obj.signal_scn = signal_scn;
+			obj.signal_id = signal_id;
+			var timings = [];
+			$($("#up_menu" + count).find('input')).each(function(){
+				console.log($(this).val());
+				timings.push($(this).val());
+			});
+			obj.timings = timings;
+			stages_info.push(obj);
+			count++;
+		});
+		console.log(stages_info);
+		$.ajax({
+			url: '../utils/add_plan.php',
+			data: {
+				group_scn: groupSCN,
+				plan_scn: plan_scn,
+				cycle_time: cycle_time,
+				signals: JSON.stringify(stages_info)
+			},
+			type: 'POST',
+			success: function(result) {
+				if(result.includes("success")){
+					alert("Successfully added plan");
+					location.reload();
+				}
+				else{
+					alert("Some error occured. Please try again");
+				}
+			}
+		});
+	});
 
 
 	//not used yet
