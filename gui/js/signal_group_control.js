@@ -13,15 +13,21 @@ $(document).ready(function() {
 		success: function(result) {
 			var addedSignals = $.parseJSON(result);
 			console.log(addedSignals);
+			var signalOptions = '';
 			for (var i = 0; i < addedSignals.length; i++) {
-				$('.signal_table tbody').append('<tr><td colspan="1"><input type="radio" name="groups"></td><td colspan="2">'+(i+1)+'</td><td colspan="4">'+addedSignals[i].SCN+'</td><td colspan="4">'+addedSignals[i].ShortDescription+'</td></tr>');
+				signalOptions += '<option value="'+ addedSignals[i].SCN +'">'+ addedSignals[i].SCN +'</option>'
+			}
+			$('.offset_info_container').append('<table class="table table-bordered"><thead><tr><td colspan="1">Signal 1</td><td colspan="1">Signal 2</td><td colspan="1">Offset time(in seconds)</td></tr></thead><tbody class="offset_info_container_tbody"></tbody></table>')
+			for (var i = 0; i < addedSignals.length; i++) {
+				$('.signal_table tbody').append('<tr><td colspan="1"><input type="radio" name="groups"></td><td colspan="2">'+(i+1)+'</td><td colspan="4">'+addedSignals[i].SCN+'</td><td colspan="4">'+addedSignals[i].ShortDescription+'</td></tr>');				
 				if(i==0){
-					var divs = '<div id="up_menu'+i+'" class="tab-pane fade active in"><h3>Stage Timings</h3><table class="table table-bordered"><thead><tr><td colspan="1">Stage</td><td colspan="1">Time(in seconds)</td></tr></thead><tbody class="up_stage_timings"></tbody></table></div>'
+					var divs = '<div id="up_menu'+i+'" class="tab-pane fade active in"><table class="table table-bordered"><thead><tr><td colspan="1">Stage</td><td colspan="1">Time(in seconds)</td></tr></thead><tbody class="up_stage_timings"></tbody></table></div>'
 					$('.up_tab').append(divs)
 					$('.up_phases_tabs').append('<li class="active"><a data-toggle="pill" signal-id='+ addedSignals[i].SignalID +' href="#up_menu0">'+addedSignals[i].SCN+'</a></li>')
 				}
 				else{
-					var divs = '<div id="up_menu'+i+'" class="tab-pane fade"><h3>Stage Timings</h3><table class="table table-bordered"><thead><tr><td colspan="1">Stage</td><td colspan="1">Time(in seconds)</td></tr></thead><tbody class="up_stage_timings"></tbody></table></div>'
+					$('.offset_info_container_tbody').append('<tr><td><select>'+ signalOptions +'</select></td><td><select>'+ signalOptions +'</select></td><td><input style="width:150px" type="number"></td></tr>');
+					var divs = '<div id="up_menu'+i+'" class="tab-pane fade"><table class="table table-bordered"><thead><tr><td colspan="1">Stage</td><td colspan="1">Time(in seconds)</td></tr></thead><tbody class="up_stage_timings"></tbody></table></div>'
 					$('.up_tab').append(divs)
 					$('.up_phases_tabs').append('<li><a data-toggle="pill" signal-id='+ addedSignals[i].SignalID +' href="#up_menu'+i+'">'+addedSignals[i].SCN+'</a></li>')
 				}
@@ -303,9 +309,9 @@ $(document).ready(function() {
 		var plan_scn = $(".plan_scn").val();
 		var cycle_time = $(".cycle_time").val();
 		var stages_info = [];
+		var offset_info = [];
 		var count = 0;
 		$($(".up_phases_tabs").find('a')).each(function(){
-			console.log($(this).attr("signal-id"));
 			var signal_scn = this.innerHTML;
 			var signal_id = $(this).attr("signal-id");
 			var obj = {};
@@ -313,21 +319,30 @@ $(document).ready(function() {
 			obj.signal_id = signal_id;
 			var timings = [];
 			$($("#up_menu" + count).find('input')).each(function(){
-				console.log($(this).val());
 				timings.push($(this).val());
 			});
 			obj.timings = timings;
 			stages_info.push(obj);
 			count++;
 		});
-		console.log(stages_info);
+		$($(".offset_info_container_tbody").find('tr')).each(function(){
+			var start_signal_scn = $(this).find('select')[0].value;
+			var end_signal_scn = $(this).find('select')[1].value;
+			var offset_time = $(this).find('input').val();
+			var obj = {};
+			obj.start_signal_scn = start_signal_scn;
+			obj.end_signal_scn = end_signal_scn;
+			obj.offset_time = offset_time;
+			offset_info.push(obj);
+		});
 		$.ajax({
 			url: '../utils/add_plan.php',
 			data: {
 				group_scn: groupSCN,
 				plan_scn: plan_scn,
 				cycle_time: cycle_time,
-				signals: JSON.stringify(stages_info)
+				signals: JSON.stringify(stages_info),
+				offsets: JSON.stringify(offset_info)
 			},
 			type: 'POST',
 			success: function(result) {
