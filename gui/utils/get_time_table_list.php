@@ -27,10 +27,8 @@ function get_time_table_list(){
 		    $timetable_row = array('timetable_scn' => $row["TimeTableSCN"],'time_slots' => $timings);
 		    array_push($timetables, $timetable_row);
 		}
-		print_r($timetables);
 
-
-		return json_encode($result);
+		return json_encode($timetables);
 	}
 	catch(Exception $e){
         return "F";
