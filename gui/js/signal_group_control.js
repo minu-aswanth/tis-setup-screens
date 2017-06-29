@@ -328,11 +328,11 @@ $(document).ready(function() {
 		$($(".offset_info_container_tbody").find('tr')).each(function(){
 			var start_signal_scn = $(this).find('select')[0].value;
 			var end_signal_scn = $(this).find('select')[1].value;
-			var offet_time = $(this).find('input').val();
+			var offset_time = $(this).find('input').val();
 			var obj = {};
 			obj.start_signal_scn = start_signal_scn;
 			obj.end_signal_scn = end_signal_scn;
-			obj.offet_time = offet_time;
+			obj.offset_time = offset_time;
 			offset_info.push(obj);
 		});
 		$.ajax({
