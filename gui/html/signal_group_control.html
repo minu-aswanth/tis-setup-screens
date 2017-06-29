@@ -68,6 +68,9 @@
 		.update_group_button_table{
 			border:none;
 		}
+		.timetable_timings{
+			background-color: orange;
+		}
 	</style>
 	<script>
 		$( document ).ready(function() {
@@ -174,7 +177,7 @@
 		<div class="row">
 			<div class="col-sm-3">&nbsp;</div>
 			<div class="col-sm-2"><button class="btn btn-danger add_timetable_modal" onclick='$("#add_timetable_modal").modal()'>Add Timetable</button></div>
-			<div class="col-sm-2"><button class="btn btn-danger update_timetable_modal" onclick='$("#update_timetable_modal").modal()'>Update Timetable</button></div>
+			<div class="col-sm-2"><button class="btn btn-danger update_timetable_modal" onclick=update_timetable_modal()>Update Timetable</button></div>
 			<div class="col-sm-2"><button class="btn btn-danger delete_timetable_modal" onclick=delete_timetable_modal()>Delete Timetable</button></div>
 			<div class="col-sm-3">&nbsp;</div>
 		</div>
@@ -366,12 +369,12 @@
 	  			<h3>Update Timetable</h3>
     		</div>
     		<div class="modal-body table-responsive" style="padding:0px 50px;">
-    			<div class="add_timetable_div">
+    			<div class="update_timetable_div">
 					<table class="table table-bordered">
 						<tbody class="plans_body">
 							<tr>
 								<td colspan="1">Timetable SCN</td>
-								<td colspan="1"><input class="timetable_scn_update" disabled></td>
+								<td colspan="1"><input class="timetable_scn_update form-control" disabled></td>
 							</tr>
 							<tr>
 								<td colspan="1">Number of Slots</td>
@@ -397,7 +400,7 @@
 							</tr>
 						</tbody>
 					</table>
-					<button class="btn btn-danger add_timetable">Update Timetable</button>
+					<button class="btn btn-danger update_timetable">Update Timetable</button>
 				</div>
 				<br><br><br>
 			</div>

@@ -76,17 +76,26 @@ $(document).ready(function() {
 	}
 
 	//getting timetable to display
-	// $.ajax({
-	// 	url: '../utils/group_details.php',
-	// 	type: 'POST',
-	// 	success: function(result) {
-	// 		var timetables = jQuery.parseJSON(result)
-	// 		console.log(timetables);
-	// 		for (var i = 0; i < timetables.length; i++) {
-	// 			$('.timetable_table tbody').append('<tr><td colspan="1"><input type="radio" name="groups"></td><td colspan="2">'+(i+1)+'</td><td colspan="4">'+timetables[i].SCN+'</td><td colspan="4">'+timetables[i].NumPlans+'</td></tr>')
-	// 		}
-	// 	}
-	// });
+	$.ajax({
+		url: '../utils/get_time_table_list.php',
+		type: 'POST',
+		data: {
+			group_scn: groupSCN
+		},
+		success: function(result) {
+			console.log("allo");
+			var timetables = jQuery.parseJSON(result)
+			console.log(timetables);
+			var rows = '';
+			for (var i = 0; i < timetables.length; i++) {
+				rows += '<tr><td colspan="1"><input type="radio" name="groups"></td><td colspan="2">'+(i+1)+'</td><td colspan="4">'+timetables[i].timetable_scn+'</td><td colspan="4">'
+				for(var j = 0; j < timetables[i].time_slots.length; j++)
+					rows += '<span class="timetable_timings">' + timetables[i].time_slots[j][0] + ' to ' + timetables[i].time_slots[j][1] + '</span> '
+				rows+='</td></tr>'
+			}
+			$('.timetable_table tbody').append(rows);
+		}
+	});
 
 	//adding a new timetable
 	$('.add_timetable').click(function(){
@@ -158,33 +167,123 @@ $(document).ready(function() {
 		});
 	});
 
-	// update_timetable_modal = function(){
-	// 	try{
-	// 		var group_name = $('input[name=groups]:checked').closest('tr').find('td')[2].innerHTML
-	// 		var num_plans = $('input[name=groups]:checked').closest('tr').find('td')[3].innerHTML
-	// 		$('.num_plans_drop_update option[value='+num_plans+']').attr("selected", "selected");
-	// 		$('.num_plans_drop_update').change();
-	// 		$('.group_name_update').html(group_name)
-	// 		$.ajax({
-	// 			url: '../utils/get_group.php',
-	// 			data :{group_id:group_id},
-	// 			type: 'POST',
-	// 			success: function(result) {
-	// 				var plans = jQuery.parseJSON(result)
-	// 				for (var i = 0; i < plans.length; i++) {
-	// 					var start_time = plans[i].StartTime.substr(0,5)
-	// 					var end_time = plans[i].EndTime.substr(0,5)
-	// 					$($($($('.plan_config_body_update').find('tr')[i]).find('td')[1]).find('select')[0]).find('option:contains("'+start_time+'")').attr('selected', 'selected')
-	// 					$($($($('.plan_config_body_update').find('tr')[i]).find('td')[2]).find('select')[0]).find('option:contains("'+end_time+'")').attr('selected', 'selected')
-	// 				}
-	// 			}
-	// 		});
-	// 		$("#update_timetable_modal").modal()
-	// 	}
-	// 	catch(err){
-	// 		alert("Please select a group to edit");
-	// 	}
-	// }
+	update_timetable_modal = function(){
+		try{
+			var timetable_scn = $('input[name=groups]:checked').closest('tr').find('td')[2].innerHTML
+			var spans = $('input[name=groups]:checked').closest('tr').find('span')
+			console.log(spans);
+			var num_plans = spans.length;
+			$('.num_plans_drop_update option[value='+num_plans+']').attr("selected", "selected");
+			$('.num_plans_drop_update').change();
+			$('.timetable_scn_update').val(timetable_scn);
+			for (var i = 0; i < spans.length; i++) {
+				// console.log(spans[i].innerHTML.split(" to ")[1]);
+				var start_time = spans[i].innerHTML.split(" to ")[0]
+				var end_time = spans[i].innerHTML.split(" to ")[1]
+				$($($($('.plan_config_body_update').find('tr')[i]).find('td')[1]).find('select')[0]).find('option:contains("'+start_time+'")').attr('selected', 'selected')
+				$($($($('.plan_config_body_update').find('tr')[i]).find('td')[2]).find('select')[0]).find('option:contains("'+end_time+'")').attr('selected', 'selected')
+			}
+			$("#update_timetable_modal").modal()
+		}
+		catch(err){
+			alert("Please select a timetable to edit");
+		}
+	}
+
+	$('.update_timetable').click(function(){
+		var timetable_scn = $('.timetable_scn_update').val();
+		var num_plans = $('.num_plans_drop_update').find(":selected").text();
+		var post_times = []
+		var time_arrays = []
+		for(var i=0;i<num_plans;i++){
+			var element = document.getElementsByClassName('plan_config_body_update')[0].rows[i]
+			var plan_no = element.cells[0].innerHTML
+			var start_time = $(element.cells[1]).find(":selected").text()
+			var end_time = $(element.cells[2]).find(":selected").text()
+			if(start_time == end_time){
+				alert("Start Time and End Time cannot be Equal")
+				return;
+			}
+			var start_datetime = new Date('2014','8','2',start_time.split(':')[0],start_time.split(':')[1])
+			var end_datetime = new Date('2014','8','2',end_time.split(':')[0],end_time.split(':')[1])
+			if(end_datetime < start_datetime){
+				alert("End Time cannot be less than Start Time")
+				return;
+			}
+			time_arrays.push([start_datetime, end_datetime])
+			post_times.push([start_time, end_time])
+		}
+		var check = false;
+		for (var i = 0; i < time_arrays.length; i++) {
+			for (var j = 0; j < time_arrays.length; j++) {
+				if(i!=j){
+					if(time_arrays[i][0] < time_arrays[j][0] && time_arrays[i][1] > time_arrays[j][0]){
+						check = true;
+					}
+					if(time_arrays[i][0] > time_arrays[j][1] && time_arrays[i][1] < time_arrays[j][1]){
+						check = true;
+					}
+				}
+			}
+		}
+		if(check){
+			alert("Plan Overlapped, Please Retry")
+			return;
+		}
+		var time_config = 0;
+		for (var i = 0; i < time_arrays.length; i++) {
+			time_config += time_arrays[i][1]-time_arrays[i][0]
+		}
+		time_config = time_config/3600000
+		if(time_config != 24){ 
+			alert("Please Schedule the group for 24 hr.");
+			return;
+		}
+		$.ajax({
+			url: '../utils/update_time_table.php',
+			data :{
+				group_scn: groupSCN,
+				timetable_scn: timetable_scn,
+				time_slots: JSON.stringify(post_times)
+			},
+			type: 'POST',
+			success: function(result) {
+				if(result.includes("success")){
+					alert("Timetable updated successfully");
+					location.reload();
+				}
+				else{
+					alert("Some error occured. Please try again");
+				}
+			}
+		});
+	})
+
+	delete_timetable_modal = function(){
+		try{
+			var timetable_scn = $('input[name=groups]:checked').closest('tr').find('td')[2].innerHTML;
+			$.ajax({
+				url: '../utils/delete_time_table.php',
+				data :{
+					group_scn: groupSCN,
+					timetable_scn:timetable_scn
+				},
+				type: 'POST',
+				success: function(result) {
+					if(result.includes("success")){
+						alert("Timetable deleted successfully");
+						location.reload();
+					}
+					else{
+						alert("Some error occured. Please try again");
+					}
+				}
+			});
+		}
+		catch(err){
+			alert("Please select a timetable to delete");
+		}
+	}
 
 
 	//not used yet
