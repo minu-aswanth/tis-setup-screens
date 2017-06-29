@@ -9,11 +9,11 @@ function update_time_table(){
 		$time_slots = json_decode($_POST['time_slots']);
 		
 		$link = linkToTIS();
-		$handle=$link->prepare("INSERT INTO `time_tables`(`TimeTableSCN`, `Group_SCN`, `StartTime`, `EndTime`) VALUES (:timetable_scn,:group_scn,:start_time,:end_time)");
+		$handle=$link->prepare("DELETE FROM `time_tables` WHERE `Group_SCN` = :group_scn AND `TimeTableSCN` = :timetable_scn");
 		$handle->bindParam(':group_scn', $group_scn);
 		$handle->bindParam(':timetable_scn', $timetable_scn);
 		$handle->execute();
-		
+
 		foreach ($time_slots as $slot) {
 			$handle=$link->prepare("INSERT INTO `time_tables`(`TimeTableSCN`, `Group_SCN`, `StartTime`, `EndTime`) VALUES (:timetable_scn,:group_scn,:start_time,:end_time)");
 			$handle->bindParam(':group_scn', $group_scn);
