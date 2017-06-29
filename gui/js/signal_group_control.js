@@ -75,7 +75,18 @@ $(document).ready(function() {
 		});
 	}
 
-
+	//getting timetable to display
+	// $.ajax({
+	// 	url: '../utils/group_details.php',
+	// 	type: 'POST',
+	// 	success: function(result) {
+	// 		var timetables = jQuery.parseJSON(result)
+	// 		console.log(timetables);
+	// 		for (var i = 0; i < timetables.length; i++) {
+	// 			$('.timetable_table tbody').append('<tr><td colspan="1"><input type="radio" name="groups"></td><td colspan="2">'+(i+1)+'</td><td colspan="4">'+timetables[i].SCN+'</td><td colspan="4">'+timetables[i].NumPlans+'</td></tr>')
+	// 		}
+	// 	}
+	// });
 
 	//adding a new timetable
 	$('.add_timetable').click(function(){
@@ -132,12 +143,12 @@ $(document).ready(function() {
 			data :{
 				group_scn: groupSCN,
 				timetable_scn: timetable_scn,
-				time_slots: post_times
+				time_slots: JSON.stringify(post_times)
 			},
 			type: 'POST',
 			success: function(result) {
 				if(result.includes("success")){
-					alert("Signal removed successfully");
+					alert("Timetable added successfully");
 					location.reload();
 				}
 				else{
