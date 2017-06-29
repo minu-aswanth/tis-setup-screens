@@ -71,7 +71,7 @@
 	</style>
 	<script>
 		$( document ).ready(function() {
-			for (var i = 1; i < 11; i++) {
+			for (var i = 1; i < 25; i++) {
 				if(i==1){
 					$(".num_plans_drop").append("<option value='"+i+"' selected='selected'>"+i+"</option>");
 				}
@@ -79,7 +79,7 @@
 					$(".num_plans_drop").append("<option value='"+i+"'>"+i+"</option>");
 				}
 			}
-			for (var i = 1; i < 11; i++) {
+			for (var i = 1; i < 25; i++) {
 				if(i==1){
 					$(".num_plans_drop_update").append("<option value='"+i+"' selected='selected'>"+i+"</option>");
 				}
@@ -169,7 +169,32 @@
 			</tbody>		
 		</table>
 	</div>
+
+	<div class="col-sm-9" id="top_content" style="padding-top:5vh">
+		<div class="row">
+			<div class="col-sm-3">&nbsp;</div>
+			<div class="col-sm-2"><button class="btn btn-danger add_timetable_modal" onclick='$("#add_timetable_modal").modal()'>Add Timetable</button></div>
+			<div class="col-sm-2"><button class="btn btn-danger update_timetable_modal" onclick='$("#update_timetable_modal").modal()'>Update Timetable</button></div>
+			<div class="col-sm-2"><button class="btn btn-danger delete_timetable_modal" onclick=delete_timetable_modal()>Delete Timetable</button></div>
+			<div class="col-sm-3">&nbsp;</div>
+		</div>
 	</div>
+	<div class="col-sm-9" style="padding-top:8vh;">
+		<table class="signal_table table">
+			<thead>
+				<tr>
+					<th colspan="1">&nbsp;</th>
+					<th colspan="2">Sr No.</th>
+					<th colspan="4">Timetable SCN</th>
+					<th colspan="4">Timetable Timings</th>
+				</tr>
+			</thead>
+			<tbody>
+			</tbody>		
+		</table>
+	</div>
+
+	</div><br><br><br><br><br>
 </div>
 
 <div class="modal fade" id="add_signal_modal" role="dialog">
@@ -277,6 +302,104 @@
 			</div>
     		<div class="modal-body table-responsive" style="padding:0px 50px;">
 
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="add_timetable_modal" role="dialog">
+	<div class="modal-dialog">
+  		<div class="modal-content">
+  			<button id="cancelModal" type="submit" class="btn btn-danger btn-default pull-left" data-dismiss="modal">
+  				<span class="glyphicon glyphicon-remove"></span> Cancel
+  			</button>
+    		<div class="modal-header" style="padding:10px 50px;">
+	  			<h3>Add Timetable</h3>
+    		</div>
+    		<div class="modal-body table-responsive" style="padding:0px 50px;">
+    			<div class="add_timetable_div">
+					<table class="table table-bordered">
+						<tbody class="plans_body">
+							<tr>
+								<td colspan="1">Timetable SCN</td>
+								<td colspan="1"><input class="timetable_scn"></td>
+							</tr>
+							<tr>
+								<td colspan="1">Number of Slots</td>
+								<td colspan="1"><select class="num_plans_drop"></select></td>
+							</tr>						
+						</tbody>
+					</table>
+					<br>
+					<h3>Slot Configuration</h3>
+					<table class="table table-bordered">
+						<thead>
+							<tr>
+								<td colspan="1">Plan Number</td>
+								<td colspan="2">Start Time</td>
+								<td colspan="2">End Time</td>
+							</tr>
+						</thead>
+						<tbody class="plan_config_body">
+							<tr>
+								<td colspan="1">1</td>
+								<td colspan="2"><select class="time"></select></td>
+								<td colspan="2"><select class="time"></select></td>
+							</tr>
+						</tbody>
+					</table>
+					<button class="btn btn-danger add_timetable">Add Timetable</button>
+				</div>
+				<br><br><br>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="update_timetable_modal" role="dialog">
+	<div class="modal-dialog">
+  		<div class="modal-content">
+  			<button id="cancelModal" type="submit" class="btn btn-danger btn-default pull-left" data-dismiss="modal">
+  				<span class="glyphicon glyphicon-remove"></span> Cancel
+  			</button>
+    		<div class="modal-header" style="padding:10px 50px;">
+	  			<h3>Update Timetable</h3>
+    		</div>
+    		<div class="modal-body table-responsive" style="padding:0px 50px;">
+    			<div class="add_timetable_div">
+					<table class="table table-bordered">
+						<tbody class="plans_body">
+							<tr>
+								<td colspan="1">Timetable SCN</td>
+								<td colspan="1"><input class="timetable_scn_update" disabled></td>
+							</tr>
+							<tr>
+								<td colspan="1">Number of Slots</td>
+								<td colspan="1"><select class="num_plans_drop_update"></select></td>
+							</tr>						
+						</tbody>
+					</table>
+					<br>
+					<h3>Slot Configuration</h3>
+					<table class="table table-bordered">
+						<thead>
+							<tr>
+								<td colspan="1">Plan Number</td>
+								<td colspan="2">Start Time</td>
+								<td colspan="2">End Time</td>
+							</tr>
+						</thead>
+						<tbody class="plan_config_body_update">
+							<tr>
+								<td colspan="1">1</td>
+								<td colspan="2"><select class="time"></select></td>
+								<td colspan="2"><select class="time"></select></td>
+							</tr>
+						</tbody>
+					</table>
+					<button class="btn btn-danger add_timetable">Update Timetable</button>
+				</div>
+				<br><br><br>
 			</div>
 		</div>
 	</div>
