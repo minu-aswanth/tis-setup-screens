@@ -1,0 +1,40 @@
+<?php
+
+include 'dblinker.php';
+
+function add_time_table(){
+	try {
+		$group_scn = $_POST['group_scn'];
+		$plan_scn = $_POST['plan_scn'];
+		$cycle_time = $_POST['cycle_time'];
+		
+		$link = linkToTIS();
+		$handle=$link->prepare("INSERT INTO `plans`(`PlanSCN`, `Group_SCN`, `CycleTime`) VALUES (:plan_scn, :group_scn, :cycle_time)");
+		$handle->bindParam(':group_scn', $group_scn);
+		$handle->bindParam(':plan_scn', $plan_scn);
+		$handle->bindParam(':cycle_time', $cycle_time);
+		$handle->execute();
+
+		$signals = json_decode($_POST['signals']);
+		
+		foreach ($signals as $signal) {
+			$signal_scn = $signal["signal_scn"];
+			$signal_id = $signal["signal_id"];
+			$i = 1;
+			foreach ($signal["timings"] as $time) {
+				$handle=$link->prepare("INSERT INTO `signal_timings`(`SignalSCN`, `Plan_SCN`, `StageNumber`, `StageTime`) VALUES (:signal_scn, :plan_scn, :stage_number, :stage_time)");
+				$handle->bindParam(':signal_scn', $signal_scn);
+				$handle->bindParam(':plan_scn', $plan_scn);
+				$handle->bindParam(':stage_number', $i++);
+				$handle->bindParam(':stage_time', $time);
+				$handle->execute();
+			}
+		}
+		return "success";
+	}
+	catch(Exception $e){
+        return "F";
+    }
+}
+echo add_time_table();
+?>
