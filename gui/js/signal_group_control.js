@@ -2,6 +2,7 @@ $(document).ready(function() {
 
 	var groupSCN = window.location.href.split('=')[1];
 	console.log(groupSCN);
+	var allSignalsSCN = [];
 
 	//getting all signals initially to display in the table
 	$.ajax({
@@ -16,6 +17,7 @@ $(document).ready(function() {
 			var signalOptions = '';
 			for (var i = 0; i < addedSignals.length; i++) {
 				signalOptions += '<option value="'+ addedSignals[i].SCN +'">'+ addedSignals[i].SCN +'</option>'
+				allSignalsSCN.push(addedSignals[i].SCN);
 			}
 			$('.offset_info_container').append('<table class="table table-bordered"><thead><tr><td colspan="1">Signal 1</td><td colspan="1">Signal 2</td><td colspan="1">Offset time(in seconds)</td></tr></thead><tbody class="offset_info_container_tbody"></tbody></table>')
 			for (var i = 0; i < addedSignals.length; i++) {
@@ -308,9 +310,15 @@ $(document).ready(function() {
 	$('.add_plan').click(function(){
 		var plan_scn = $(".plan_scn").val();
 		var cycle_time = $(".cycle_time").val();
+		if(cycle_time == ""){
+			alert("Please Enter Cycle Time");
+			return false;
+		}
 		var stages_info = [];
 		var offset_info = [];
 		var count = 0;
+		var allSignalsInPlan = [];
+		
 		$($(".up_phases_tabs").find('a')).each(function(){
 			var signal_scn = this.innerHTML;
 			var signal_id = $(this).attr("signal-id");
@@ -318,9 +326,16 @@ $(document).ready(function() {
 			obj.signal_scn = signal_scn;
 			obj.signal_id = signal_id;
 			var timings = [];
+			var totalTime = 0;
 			$($("#up_menu" + count).find('input')).each(function(){
 				timings.push($(this).val());
+				totalTime += parseInt($(this).val());
 			});
+			console.log(totalTime);
+			if(totalTime != cycle_time){
+				alert("The sum of stage times is not equal to the cycle time");
+				return false;
+			}
 			obj.timings = timings;
 			stages_info.push(obj);
 			count++;
@@ -329,12 +344,31 @@ $(document).ready(function() {
 			var start_signal_scn = $(this).find('select')[0].value;
 			var end_signal_scn = $(this).find('select')[1].value;
 			var offset_time = $(this).find('input').val();
+			if(start_signal_scn == end_signal_scn){
+				alert("Start and end signal cannot be same");
+				return false;
+			}
+			if(offset_time == ""){
+				alert("Please Enter Offset Time");
+				return false;
+			}
+			var found = jQuery.inArray(start_signal_scn, allSignalsInPlan);
+			if(found < 0)
+				allSignalsInPlan.push(start_signal_scn);
+			var found = jQuery.inArray(end_signal_scn, allSignalsInPlan);
+			if(found < 0)
+				allSignalsInPlan.push(end_signal_scn);
 			var obj = {};
 			obj.start_signal_scn = start_signal_scn;
 			obj.end_signal_scn = end_signal_scn;
 			obj.offset_time = offset_time;
 			offset_info.push(obj);
 		});
+		if(allSignalsSCN.length != allSignalsInPlan.length){
+			alert("Offset information is insufficient");
+			return false;
+		}
+		
 		$.ajax({
 			url: '../utils/add_plan.php',
 			data: {
