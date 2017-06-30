@@ -1,7 +1,7 @@
 $(document).ready(function() {
 
 	var groupSCN = window.location.href.split('=')[1];
-	console.log(groupSCN);
+	// console.log(groupSCN);
 	var allSignalsSCN = [];
 
 	//getting all signals initially to display in the table
@@ -13,28 +13,37 @@ $(document).ready(function() {
 		},
 		success: function(result) {
 			var addedSignals = $.parseJSON(result);
-			console.log(addedSignals);
+			// console.log(addedSignals);
 			var signalOptions = '';
 			for (var i = 0; i < addedSignals.length; i++) {
 				signalOptions += '<option value="'+ addedSignals[i].SCN +'">'+ addedSignals[i].SCN +'</option>'
 				allSignalsSCN.push(addedSignals[i].SCN);
 			}
 			$('.offset_info_container').append('<table class="table table-bordered"><thead><tr><td colspan="1">Signal 1</td><td colspan="1">Signal 2</td><td colspan="1">Offset time(in seconds)</td></tr></thead><tbody class="offset_info_container_tbody"></tbody></table>')
+			$('.offset_info_container_update').append('<table class="table table-bordered"><thead><tr><td colspan="1">Signal 1</td><td colspan="1">Signal 2</td><td colspan="1">Offset time(in seconds)</td></tr></thead><tbody class="offset_info_container_update_tbody"></tbody></table>')
 			for (var i = 0; i < addedSignals.length; i++) {
 				$('.signal_table tbody').append('<tr><td colspan="1"><input type="radio" name="groups"></td><td colspan="2">'+(i+1)+'</td><td colspan="4">'+addedSignals[i].SCN+'</td><td colspan="4">'+addedSignals[i].ShortDescription+'</td></tr>');				
 				if(i==0){
 					var divs = '<div id="up_menu'+i+'" class="tab-pane fade active in"><table class="table table-bordered"><thead><tr><td colspan="1">Stage</td><td colspan="1">Time(in seconds)</td></tr></thead><tbody class="up_stage_timings"></tbody></table></div>'
+					var divs_update = '<div id="up_menu_update'+i+'" class="tab-pane fade active in"><table class="table table-bordered"><thead><tr><td colspan="1">Stage</td><td colspan="1">Time(in seconds)</td></tr></thead><tbody class="up_stage_timings"></tbody></table></div>'
 					$('.up_tab').append(divs)
+					$('.up_tab_update').append(divs_update)
 					$('.up_phases_tabs').append('<li class="active"><a data-toggle="pill" signal-id='+ addedSignals[i].SignalID +' href="#up_menu0">'+addedSignals[i].SCN+'</a></li>')
+					$('.up_phases_tabs_update').append('<li class="active"><a data-toggle="pill" signal-id='+ addedSignals[i].SignalID +' href="#up_menu_update0">'+addedSignals[i].SCN+'</a></li>')
 				}
 				else{
 					$('.offset_info_container_tbody').append('<tr><td><select>'+ signalOptions +'</select></td><td><select>'+ signalOptions +'</select></td><td><input style="width:150px" type="number"></td></tr>');
+					$('.offset_info_container_update_tbody').append('<tr><td><select>'+ signalOptions +'</select></td><td><select>'+ signalOptions +'</select></td><td><input style="width:150px" type="number"></td></tr>');
 					var divs = '<div id="up_menu'+i+'" class="tab-pane fade"><table class="table table-bordered"><thead><tr><td colspan="1">Stage</td><td colspan="1">Time(in seconds)</td></tr></thead><tbody class="up_stage_timings"></tbody></table></div>'
+					var divs_update = '<div id="up_menu_update'+i+'" class="tab-pane fade"><table class="table table-bordered"><thead><tr><td colspan="1">Stage</td><td colspan="1">Time(in seconds)</td></tr></thead><tbody class="up_stage_timings"></tbody></table></div>'
 					$('.up_tab').append(divs)
+					$('.up_tab_update').append(divs_update)
 					$('.up_phases_tabs').append('<li><a data-toggle="pill" signal-id='+ addedSignals[i].SignalID +' href="#up_menu'+i+'">'+addedSignals[i].SCN+'</a></li>')
+					$('.up_phases_tabs_update').append('<li><a data-toggle="pill" signal-id='+ addedSignals[i].SignalID +' href="#up_menu_update'+i+'">'+addedSignals[i].SCN+'</a></li>')
 				}
 				for (var j = 1; j <= addedSignals[i].StagesNumber; j++) {
 					$('#up_menu' + i).find('.up_stage_timings').append('<tr><td colspan="1">Stage - '+j+'</td><td colspan="1"><input type="number" placeholder="Enter Stage '+j+' Time" class="up_stage_'+j+'"</td></tr>');		
+					$('#up_menu_update' + i).find('.up_stage_timings').append('<tr><td colspan="1">Stage - '+j+'</td><td colspan="1"><input type="number" placeholder="Enter Stage '+j+' Time" class="up_stage_'+j+'"</td></tr>');		
 				}
 			}
 		}
@@ -46,7 +55,7 @@ $(document).ready(function() {
 		type: 'POST',
 		success: function(result) {
 			var signals = $.parseJSON(result);
-			console.log(signals);
+			// console.log(signals);
 			for (var i = 0; i < signals.length; i++) {
 				$('.signal_scn_select').append('<option value='+ signals[i].SCN +'>'+ signals[i].SCN +'</option>')				
 			}
@@ -104,9 +113,9 @@ $(document).ready(function() {
 			group_scn: groupSCN
 		},
 		success: function(result) {
-			console.log("allo");
+			// console.log("allo");
 			var timetables = jQuery.parseJSON(result)
-			console.log(timetables);
+			// console.log(timetables);
 			var rows = '';
 			for (var i = 0; i < timetables.length; i++) {
 				rows += '<tr><td colspan="1"><input type="radio" name="groups"></td><td colspan="2">'+(i+1)+'</td><td colspan="4">'+timetables[i].timetable_scn+'</td><td colspan="4">'
@@ -192,7 +201,7 @@ $(document).ready(function() {
 		try{
 			var timetable_scn = $('input[name=groups]:checked').closest('tr').find('td')[2].innerHTML
 			var spans = $('input[name=groups]:checked').closest('tr').find('span')
-			console.log(spans);
+			// console.log(spans);
 			var num_plans = spans.length;
 			$('.num_plans_drop_update option[value='+num_plans+']').attr("selected", "selected");
 			$('.num_plans_drop_update').change();
@@ -306,6 +315,22 @@ $(document).ready(function() {
 		}
 	}
 
+	//getting all plans
+	$.ajax({
+		url: '../utils/get_plan_list.php',
+		type: 'POST',
+		data: {
+			group_scn: groupSCN
+		},
+		success: function(result) {
+			var plans = jQuery.parseJSON(result)
+			// console.log(plans);
+			for (var i = 0; i < plans.length; i++) {
+				$('.plan_table tbody').append('<tr><td colspan="1"><input type="radio" name="groups"></td><td colspan="2">'+(i+1)+'</td><td colspan="4">'+plans[i].PlanSCN+'</td><td colspan="4">'+plans[i].CycleTime+'</td></tr>')
+			}
+		}
+	});
+
 	//adding a new plan
 	$('.add_plan').click(function(){
 		var plan_scn = $(".plan_scn").val();
@@ -331,7 +356,7 @@ $(document).ready(function() {
 				timings.push($(this).val());
 				totalTime += parseInt($(this).val());
 			});
-			console.log(totalTime);
+			// console.log(totalTime);
 			if(totalTime != cycle_time){
 				alert("The sum of stage times is not equal to the cycle time");
 				return false;
@@ -390,6 +415,134 @@ $(document).ready(function() {
 			}
 		});
 	});
+
+	//updating plans
+	update_plan_modal = function(){
+		try{
+			var plan_scn = $('input[name=groups]:checked').closest('tr').find('td')[2].innerHTML
+			var cycle_time = $('input[name=groups]:checked').closest('tr').find('td')[3].innerHTML
+			$('.plan_scn_update').val(plan_scn);
+			$('.cycle_time_update').val(cycle_time);
+			
+			$.ajax({
+				url: '../utils/get_plan.php',
+				type: 'POST',
+				data: {
+					plan_scn: plan_scn
+				},
+				success: function(result) {
+					var planDetails = jQuery.parseJSON(result)
+					// console.log(planDetails);
+					var count = 0;
+					var count2 = 0;
+					$($(".up_phases_tabs_update").find('a')).each(function(){
+						$($("#up_menu_update" + count).find('input')).each(function(){
+							$(this).val(planDetails.signals[count2].StageTime);
+							count2++;
+						});						
+						count++;
+					});
+					var count3 = 0;
+					$($(".offset_info_container_update_tbody").find('tr')).each(function(){
+						$(this).find('select')[0].value = planDetails.offsets[count3].Origin_Signal_SCN;
+						$(this).find('select')[1].value = planDetails.offsets[count3].Destination_Signal_SCN;
+						$(this).find('input').val(planDetails.offsets[count3].OffsetTime);
+						count3++;
+					});
+				}
+			});	
+
+			$("#update_plan_modal").modal()
+		}
+		catch(err){
+			alert("Please select a plan to edit");
+		}
+	}
+
+	$('.update_plan').click(function(){
+		var plan_scn = $(".plan_scn_update").val();
+		var cycle_time = $(".cycle_time_update").val();
+		if(cycle_time == ""){
+			alert("Please Enter Cycle Time");
+			return false;
+		}
+		var stages_info = [];
+		var offset_info = [];
+		var count = 0;
+		var allSignalsInPlan = [];
+		
+		$($(".up_phases_tabs_update").find('a')).each(function(){
+			var signal_scn = this.innerHTML;
+			var signal_id = $(this).attr("signal-id");
+			var obj = {};
+			obj.signal_scn = signal_scn;
+			obj.signal_id = signal_id;
+			var timings = [];
+			var totalTime = 0;
+			$($("#up_menu_update" + count).find('input')).each(function(){
+				timings.push($(this).val());
+				totalTime += parseInt($(this).val());
+			});
+			// console.log(totalTime);
+			if(totalTime != cycle_time){
+				alert("The sum of stage times is not equal to the cycle time");
+				return false;
+			}
+			obj.timings = timings;
+			stages_info.push(obj);
+			count++;
+		});
+		$($(".offset_info_container_update_tbody").find('tr')).each(function(){
+			var start_signal_scn = $(this).find('select')[0].value;
+			var end_signal_scn = $(this).find('select')[1].value;
+			var offset_time = $(this).find('input').val();
+			if(start_signal_scn == end_signal_scn){
+				alert("Start and end signal cannot be same");
+				return false;
+			}
+			if(offset_time == ""){
+				alert("Please Enter Offset Time");
+				return false;
+			}
+			var found = jQuery.inArray(start_signal_scn, allSignalsInPlan);
+			if(found < 0)
+				allSignalsInPlan.push(start_signal_scn);
+			var found = jQuery.inArray(end_signal_scn, allSignalsInPlan);
+			if(found < 0)
+				allSignalsInPlan.push(end_signal_scn);
+			var obj = {};
+			obj.start_signal_scn = start_signal_scn;
+			obj.end_signal_scn = end_signal_scn;
+			obj.offset_time = offset_time;
+			offset_info.push(obj);
+		});
+		if(allSignalsSCN.length != allSignalsInPlan.length){
+			alert("Offset information is insufficient");
+			return false;
+		}
+		
+		$.ajax({
+			url: '../utils/update_plan.php',
+			data: {
+				group_scn: groupSCN,
+				plan_scn: plan_scn,
+				cycle_time: cycle_time,
+				signals: JSON.stringify(stages_info),
+				offsets: JSON.stringify(offset_info)
+			},
+			type: 'POST',
+			success: function(result) {
+				if(result.includes("success")){
+					alert("Successfully updated plan");
+					location.reload();
+				}
+				else{
+					alert("Some error occured. Please try again");
+				}
+			}
+		});
+	});
+
 
 
 	//not used yet
