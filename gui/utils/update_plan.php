@@ -10,7 +10,7 @@ function update_plan(){
 		
 		$link = linkToTIS();
 		
-		$handle=$link->prepare("DELETE FROM `plans` WHERE `Plan_SCN` = :plan_scn");
+		$handle=$link->prepare("DELETE FROM `plans` WHERE `PlanSCN` = :plan_scn");
 		$handle->bindParam(':plan_scn', $plan_scn);
 		$handle->execute();
 
