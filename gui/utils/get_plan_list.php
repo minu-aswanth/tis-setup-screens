@@ -10,7 +10,7 @@ function get_plan_list(){
 	    $handle->bindParam(':group_scn', $group_scn);
 	    $handle->execute();
 
-	    $plan_list= $handle->dfetchall(PDO::FETCH_ASSOC);
+	    $plan_list= $handle->fetchall(PDO::FETCH_ASSOC);
 	    
 	    return json_encode($plan_list);
 	}

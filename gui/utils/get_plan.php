@@ -5,8 +5,8 @@ function get_plan(){
 try {
 	$plan_scn = $_POST['plan_scn'];
 	$link = linkToTIS();
-    $handle=$link->prepare("SELECT  `SignalID` ,  `SCN` ,  `ShortDescription` FROM  `utmc_traffic_signal_static` WHERE `Group_SCN` = :group_scn "); 
-    $handle->bindParam(':group_scn', $group_scn);
+    $handle=$link->prepare("SELECT  * FROM  `plans` WHERE `PlanSCN` = :plan_scn "); 
+    $handle->bindParam(':plan_scn', $plan_scn);
     $handle->execute();
     $result = array();
     while ($row = $handle->fetch(PDO::FETCH_ASSOC)){
