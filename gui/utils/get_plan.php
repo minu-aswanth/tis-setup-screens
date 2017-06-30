@@ -8,15 +8,19 @@ try {
     $handle=$link->prepare("SELECT  * FROM  `plans` WHERE `PlanSCN` = :plan_scn "); 
     $handle->bindParam(':plan_scn', $plan_scn);
     $handle->execute();
-    $result = array();
-    while ($row = $handle->fetch(PDO::FETCH_ASSOC)){
-    	$handle2=$link->prepare("SELECT * FROM `utmc_traffic_signal_plans_stages` WHERE `SignalID` = :signalid"); 
-		$handle2->bindParam(':signalid', $row["SignalID"]);
-		$handle2->execute();
-		$count = $handle2->fetchall(PDO::FETCH_ASSOC);
-		$result_row = ['SignalID'=>$row["SignalID"],'SCN'=>$row["SCN"],'ShortDescription'=>$row["ShortDescription"],'StagesNumber'=>count($count)];
-		array_push($result, $result_row);
-    }
+    $plan_result = $handle->fetch(PDO::FETCH_ASSOC);
+
+    $handle2=$link->prepare("SELECT  * FROM  `signal_timings` WHERE `Plan_SCN` = :plan_scn "); 
+    $handle2->bindParam(':plan_scn', $plan_scn);
+    $handle2->execute();
+    $signal_timings_result = $handle2->fetchall(PDO::FETCH_ASSOC);
+
+    $handle3=$link->prepare("SELECT  * FROM  `offsets` WHERE `Plan_SCN` = :plan_scn "); 
+    $handle3->bindParam(':plan_scn', $plan_scn);
+    $handle3->execute();
+    $offset_result = $handle3->fetchall(PDO::FETCH_ASSOC);
+
+    $result = array('plan_scn'=>$plan_result["PlanSCN"],'cycle_time'=>$plan_result["CycleTime"],'signals'=>$signal_timings_result,'offsets'=>$offset_result);
 	return json_encode($result);
 }
 
