@@ -543,6 +543,32 @@ $(document).ready(function() {
 		});
 	});
 
+	//deleting plans
+	delete_plan_modal = function(){
+		try{
+			var plan_scn = $('input[name=groups]:checked').closest('tr').find('td')[2].innerHTML
+			$.ajax({
+				url: '../utils/delete_plan.php',
+				data :{
+					plan_scn: plan_scn
+				},
+				type: 'POST',
+				success: function(result) {
+					if(result.includes("success")){
+						alert("Plan deleted successfully");
+						location.reload();
+					}
+					else{
+						alert("Some error occured. Please try again");
+					}
+				}
+			});
+		}
+		catch(err){
+			alert("Please select a plan to delete");
+		}
+	}
+
 
 
 	//not used yet
