@@ -2,7 +2,7 @@
 
 include 'dblinker.php';
 
-function delete_calender(){
+function delete_calendar(){
 	try {
 		$calendar = json_decode($_POST['calendar']);
 		$group_scn = $_POST['group_scn'];
@@ -19,5 +19,5 @@ function delete_calender(){
         return "F";
     }
 }
-echo delete_calender();
+echo delete_calendar();
 ?>

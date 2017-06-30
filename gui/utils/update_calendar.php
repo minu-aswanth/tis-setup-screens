@@ -2,7 +2,7 @@
 
 include 'dblinker.php';
 
-function update_calender(){
+function update_calendar(){
 	try {
 		$calendar = json_decode($_POST['calendar']);
 		$group_scn = $_POST['group_scn'];
@@ -34,5 +34,5 @@ function update_calender(){
         return "F";
     }
 }
-echo update_calender();
+echo update_calendar();
 ?>

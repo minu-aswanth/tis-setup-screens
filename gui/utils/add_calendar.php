@@ -2,7 +2,7 @@
 
 include 'dblinker.php';
 
-function add_calender(){
+function add_calendar(){
 	try {
 		$calendar = json_decode($_POST['calendar']);
 		$group_scn = $_POST['group_scn'];
@@ -29,5 +29,5 @@ function add_calender(){
         return "F";
     }
 }
-echo add_calender();
+echo add_calendar();
 ?>
