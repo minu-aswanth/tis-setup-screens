@@ -4,6 +4,7 @@ $(document).ready(function() {
 	// console.log(groupSCN);
 	var allSignalsSCN = [];
 	var planScns = '';
+	var startingTimetableCount = 0;
 
 	//getting all signals initially to display in the table
 	$.ajax({
@@ -124,9 +125,10 @@ $(document).ready(function() {
 					rows += '<span class="timetable_timings">' + timetables[i].time_slots[j][0] + ' to ' + timetables[i].time_slots[j][1] + '</span> '
 				rows+='</td></tr>'
 				$('.timetable_scn_select').append('<option value="'+ timetables[i].timetable_scn +'">'+ timetables[i].timetable_scn +'</option>')
+				$('.timetable_scn_select_update').append('<option value="'+ timetables[i].timetable_scn +'">'+ timetables[i].timetable_scn +'</option>')
 			}
 			$('.timetable_table tbody').append(rows);
-			$('.timetable_scn_select').change();			
+			$('.timetable_scn_select').change();
 		}
 	});
 
@@ -573,6 +575,28 @@ $(document).ready(function() {
 		}
 	}
 
+	//getting all calendars
+	$.ajax({
+		url: '../utils/get_calendar.php',
+		type: 'POST',
+		data: {
+			group_scn: groupSCN
+		},
+		success: function(result) {
+			var calendars = jQuery.parseJSON(result)
+			console.log(calendars);
+			var rows = '';
+			for (var i = 0; i < calendars.length; i++) {
+				rows += '<tr><td colspan="2">'+(i+1)+'</td><td colspan="4">'+calendars[i].day+'</td><td colspan="4">'+calendars[i].timetable_scn+'</td><td colspan="4">'
+				for(var j = 0; j < calendars[i].plan_info.length; j++)
+					rows += '<span class="plan_scns_calendar">' + calendars[i].plan_info[j].Plan_SCN + '</span> '
+				rows+='</td></tr>'
+			}
+			$('.calendar_table tbody').append(rows);
+		}
+	});
+
+	//function called when timetable is changed when adding calendar
 	$('.timetable_scn_select').change(function(){
 		var timetable_scn = $(this).val();
 		var day = $(this)[0].id.replace('_select','');
@@ -585,7 +609,7 @@ $(document).ready(function() {
 			type: 'POST',
 			success: function(result) {
 				var timetableDetails = jQuery.parseJSON(result)
-				console.log(timetableDetails);
+				// console.log(timetableDetails);
 				var tds = '<tbody class="calendar_plan_select">';
 				for(var j=0; j<timetableDetails.count; j++){
 					tds += '<tr><td colspan="1" class="slot_details" slot-id="'+ timetableDetails.slots[j].SlotOrder +'">'+ timetableDetails.slots[j].StartTime +' - ' + timetableDetails.slots[j].EndTime + '</td><td colspan="1"><select class="plan_scn_select">'+ planScns +'</select></td></tr>'
@@ -593,9 +617,32 @@ $(document).ready(function() {
 				tds += '</tbody>';
 				$('#'+day+'_calendar').find('.calendar_plan_select').replaceWith(tds);
 			}
-		});
-		
+		});		
+	});
 
+	$('.timetable_scn_select_update').change(function(){
+		var timetable_scn = $(this).val();
+		var day = $(this)[0].id.replace('_select_update','');
+		$.ajax({
+			url: '../utils/get_no_of_slots.php',
+			data :{
+				timetable_scn: timetable_scn
+			},
+			type: 'POST',
+			success: function(result) {
+				var timetableDetails = jQuery.parseJSON(result)
+				// console.log(timetableDetails);
+				var tds = '<tbody class="calendar_plan_select_update">';
+				for(var j=0; j<timetableDetails.count; j++){
+					tds += '<tr><td colspan="1" class="slot_details_update" slot-id="'+ timetableDetails.slots[j].SlotOrder +'">'+ timetableDetails.slots[j].StartTime +' - ' + timetableDetails.slots[j].EndTime + '</td><td colspan="1"><select class="plan_scn_select_update">'+ planScns +'</select></td></tr>'
+				}
+				tds += '</tbody>';
+				$('#'+day+'_calendar_update').find('.calendar_plan_select_update').replaceWith(tds);				
+				if(startingTimetableCount == 6)
+					updatingPlansInUpdateCalendar();
+				startingTimetableCount++;
+			}
+		});		
 	});
 
 	//adding a new calendar
@@ -642,6 +689,96 @@ $(document).ready(function() {
 		});
 	});
 
+	//updating calendar
+	update_calendar_modal = function(){
+		var count = 0;
+		$($(".calendar_tabs_update").find('a')).each(function(){
+			var timetable_scn = $($('.calendar_table tbody').find('tr')[count]).find('td')[2].innerHTML
+			// console.log(timetable_scn);
+			$('' + $(this).attr("href")).find('.timetable_scn_select_update').val(timetable_scn);
+			count++;			
+		});
+		$('.timetable_scn_select_update').change();
+		$("#update_calendar_modal").modal();		
+	}
+
+	updatingPlansInUpdateCalendar = function(){
+		var count = 0;		
+		$($(".calendar_tabs_update").find('a')).each(function(){
+			var rowInUpdateModal = $('' + $(this).attr("href")).find('.calendar_plan_select_update select');
+			// console.log(rowInUpdateModal);
+			var count2 = 0;
+			var plan_scns = $($($('.calendar_table tbody').find('tr')[count]).find('span')).each(function(){
+				// console.log($(this)[0].innerHTML);
+				rowInUpdateModal[count2].value = $(this)[0].innerHTML;
+				count2++;
+			})
+			count++;
+		});
+	}
+
+	$('.update_calendar').click(function(){
+		var calendar_info = [];
+		
+		$($(".calendar_tabs_update").find('a')).each(function(){
+			var day = this.innerHTML;
+			var timetable_scn = $('' + $(this).attr("href")).find('.timetable_scn_select_update').val();
+			var plan_info = [];
+			$($('' + $(this).attr("href")).find('.calendar_plan_select_update tr')).each(function(){
+				// console.log($(this).find('.slot_details').attr("slot-id"));
+				var obj = {};				
+				obj.plan_scn = $(this).find('select').val(); 
+				obj.slot_order = $(this).find('.slot_details_update').attr("slot-id");
+				plan_info.push(obj);
+			});
+			console.log(plan_info);
+			var obj2 = {
+				day: day,
+				timetable_scn: timetable_scn,
+				plan_info: plan_info
+			}
+			calendar_info.push(obj2);
+		});
+		console.log(calendar_info);
+		
+		$.ajax({
+			url: '../utils/update_calendar.php',
+			data: {
+				group_scn: groupSCN,
+				calendar: JSON.stringify(calendar_info)
+			},
+			type: 'POST',
+			success: function(result) {
+				if(result.includes("success")){
+					alert("Successfully updated calendar");
+					location.reload();
+				}
+				else{
+					alert("Some error occured. Please try again");
+				}
+			}
+		});
+	});
+
+	//deleting calendar
+	delete_calendar_modal = function(){
+		$.ajax({
+			url: '../utils/delete_calendar.php',
+			data: {
+				group_scn: groupSCN
+			},
+			type: 'POST',
+			success: function(result) {
+				if(result.includes("success")){
+					alert("Successfully deleted calendar");
+					location.reload();
+				}
+				else{
+					alert("Some error occured. Please try again");
+				}
+			}
+		});	
+	}
 
 
 	//not used yet
