@@ -2,7 +2,7 @@
 
 include 'dblinker.php';
 
-function add_time_table(){
+function add_plan(){
 	try {
 		$group_scn = $_POST['group_scn'];
 		$plan_scn = $_POST['plan_scn'];
@@ -48,5 +48,5 @@ function add_time_table(){
         return "F";
     }
 }
-echo add_time_table();
+echo add_plan();
 ?>
