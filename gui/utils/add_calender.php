@@ -4,18 +4,21 @@ include 'dblinker.php';
 
 function add_calender(){
 	try {
+		$calender = json_decode($_POST['calender']);
 		$group_scn = $_POST['group_scn'];
-		$plan_scn = $_POST['plan_scn'];
-		$cycle_time = $_POST['cycle_time'];
 		
 		$link = linkToTIS();
+		foreach ($calender as $day) {
+			$date = $day->day;
+
+		}
 		$handle=$link->prepare("INSERT INTO `plans`(`PlanSCN`, `Group_SCN`, `CycleTime`) VALUES (:plan_scn, :group_scn, :cycle_time)");
 		$handle->bindParam(':group_scn', $group_scn);
 		$handle->bindParam(':plan_scn', $plan_scn);
 		$handle->bindParam(':cycle_time', $cycle_time);
 		$handle->execute();
 
-		$signals = json_decode($_POST['signals']);
+		
 		foreach ($signals as $signal) {
 			$signal_scn = $signal->signal_scn;
 			$signal_id = $signal->signal_id;

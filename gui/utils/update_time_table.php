@@ -14,13 +14,16 @@ function update_time_table(){
 		$handle->bindParam(':timetable_scn', $timetable_scn);
 		$handle->execute();
 
+		$i = 1;
 		foreach ($time_slots as $slot) {
-			$handle=$link->prepare("INSERT INTO `time_tables`(`TimeTableSCN`, `Group_SCN`, `StartTime`, `EndTime`) VALUES (:timetable_scn,:group_scn,:start_time,:end_time)");
+			$handle=$link->prepare("INSERT INTO `time_tables`(`TimeTableSCN`, `Group_SCN`, `SlotOrder`, `StartTime`, `EndTime`) VALUES (:timetable_scn,:group_scn,:slot_order,:start_time,:end_time)");
 			$handle->bindParam(':group_scn', $group_scn);
 			$handle->bindParam(':timetable_scn', $timetable_scn);
+			$handle->bindParam(':slot_order', $i);
 			$handle->bindParam(':start_time', $slot[0]);
 			$handle->bindParam(':end_time', $slot[1]);
 			$handle->execute();
+			$i++;
 		}
 		return "success";
 	}
