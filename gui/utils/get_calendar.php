@@ -1,7 +1,7 @@
 <?php
 include 'dblinker.php';
 
-function get_signal_scns(){
+function get_calendar(){
 try {
 	$group_scn = $_POST['group_scn'];
 	
@@ -28,5 +28,5 @@ catch(Exception $e){
         return "F";
     }
 }
-echo get_signal_scns();
+echo get_calendar();
 ?>
