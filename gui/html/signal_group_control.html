@@ -207,7 +207,7 @@
 		</div>
 	</div>
 	<div class="col-sm-offset-2 col-sm-9" style="padding-top:8vh;">
-		<table class="timetable_table table">
+		<table class="plan_table table">
 			<thead>
 				<tr>
 					<th colspan="1">&nbsp;</th>
@@ -484,6 +484,44 @@
 		</div>
 	</div>
 </div>
+
+<div class="modal fade" id="update_plan_modal" role="dialog">
+	<div class="modal-dialog">
+  		<div class="modal-content">
+  			<button id="cancelModal" type="submit" class="btn btn-danger btn-default pull-left" data-dismiss="modal">
+  				<span class="glyphicon glyphicon-remove"></span> Cancel
+  			</button>
+    		<div class="modal-header" style="padding:10px 50px;">
+	  			<h3>Update Plan</h3>
+    		</div>
+    		<div class="modal-body table-responsive" style="padding:0px 50px;">
+    			<div class="update_plan_div">
+					<table class="table table-bordered">
+						<tbody class="plans_body">
+							<tr>
+								<td colspan="1">Plan SCN</td>
+								<td colspan="1"><input class="plan_scn_update" disabled></td>
+							</tr>
+							<tr>
+								<td colspan="1">Cycle Time</td>
+								<td colspan="1"><input class="cycle_time_update"></td>
+							</tr>						
+						</tbody>
+					</table>
+					<h3>Plan Configuration</h3>
+					<ul class="nav nav-pills up_phases_tabs_update"></ul>
+					<br>
+					<div class="tab-content up_tab_update"></div>
+					<h3>Offset Information</h3>
+					<div class="offset_info_container_update"></div>
+					<button class="btn btn-danger update_plan">Update Plan</button>
+				</div>
+				<br><br><br>
+			</div>
+		</div>
+	</div>
+</div>
+
 
 <nav class="navbar navbar-fixed-bottom" id="footer">
 	<div class="navbar-header">
