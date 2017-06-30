@@ -4,12 +4,13 @@ include 'dblinker.php';
 
 function add_calender(){
 	try {
-		$calender = json_decode($_POST['calender']);
+		$calendar = json_decode($_POST['calendar']);
 		$group_scn = $_POST['group_scn'];
 		
 		$link = linkToTIS();
-		foreach ($calender as $day) {
+		foreach ($calendar as $day) {
 			$date = $day->day;
+			$timetable_scn = $day->timetable_scn;
 
 		}
 		$handle=$link->prepare("INSERT INTO `plans`(`PlanSCN`, `Group_SCN`, `CycleTime`) VALUES (:plan_scn, :group_scn, :cycle_time)");
