@@ -3,6 +3,7 @@ $(document).ready(function() {
 	var groupSCN = window.location.href.split('=')[1];
 	// console.log(groupSCN);
 	var allSignalsSCN = [];
+	var planScns = '';
 
 	//getting all signals initially to display in the table
 	$.ajax({
@@ -122,8 +123,10 @@ $(document).ready(function() {
 				for(var j = 0; j < timetables[i].time_slots.length; j++)
 					rows += '<span class="timetable_timings">' + timetables[i].time_slots[j][0] + ' to ' + timetables[i].time_slots[j][1] + '</span> '
 				rows+='</td></tr>'
+				$('.timetable_scn_select').append('<option value="'+ timetables[i].timetable_scn +'">'+ timetables[i].timetable_scn +'</option>')
 			}
 			$('.timetable_table tbody').append(rows);
+			$('.timetable_scn_select').change();			
 		}
 	});
 
@@ -327,6 +330,7 @@ $(document).ready(function() {
 			// console.log(plans);
 			for (var i = 0; i < plans.length; i++) {
 				$('.plan_table tbody').append('<tr><td colspan="1"><input type="radio" name="groups"></td><td colspan="2">'+(i+1)+'</td><td colspan="4">'+plans[i].PlanSCN+'</td><td colspan="4">'+plans[i].CycleTime+'</td></tr>')
+				planScns += '<option value="'+ plans[i].PlanSCN +'">'+ plans[i].PlanSCN +'</option>'
 			}
 		}
 	});
@@ -568,6 +572,75 @@ $(document).ready(function() {
 			alert("Please select a plan to delete");
 		}
 	}
+
+	$('.timetable_scn_select').change(function(){
+		var timetable_scn = $(this).val();
+		var day = $(this)[0].id.replace('_select','');
+		// console.log($(this)[0].id.replace('_select',''));
+		$.ajax({
+			url: '../utils/get_no_of_slots.php',
+			data :{
+				timetable_scn: timetable_scn
+			},
+			type: 'POST',
+			success: function(result) {
+				var timetableDetails = jQuery.parseJSON(result)
+				console.log(timetableDetails);
+				var tds = '<tbody class="calendar_plan_select">';
+				for(var j=0; j<timetableDetails.count; j++){
+					tds += '<tr><td colspan="1" class="slot_details" slot-id="'+ timetableDetails.slots[j].SlotOrder +'">'+ timetableDetails.slots[j].StartTime +' - ' + timetableDetails.slots[j].EndTime + '</td><td colspan="1"><select class="plan_scn_select">'+ planScns +'</select></td></tr>'
+				}
+				tds += '</tbody>';
+				$('#'+day+'_calendar').find('.calendar_plan_select').replaceWith(tds);
+			}
+		});
+		
+
+	});
+
+	//adding a new calendar
+	$('.add_calendar').click(function(){
+		var calendar_info = [];
+		
+		$($(".calendar_tabs").find('a')).each(function(){
+			var day = this.innerHTML;
+			var timetable_scn = $('' + $(this).attr("href")).find('.timetable_scn_select').val();
+			var plan_info = [];
+			$($('' + $(this).attr("href")).find('.calendar_plan_select tr')).each(function(){
+				// console.log($(this).find('.slot_details').attr("slot-id"));
+				var obj = {};				
+				obj.plan_scn = $(this).find('select').val(); 
+				obj.slot_order = $(this).find('.slot_details').attr("slot-id");
+				plan_info.push(obj);
+			});
+			console.log(plan_info);
+			var obj2 = {
+				day: day,
+				timetable_scn: timetable_scn,
+				plan_info: plan_info
+			}
+			calendar_info.push(obj2);
+		});
+		console.log(calendar_info);
+		
+		$.ajax({
+			url: '../utils/add_calendar.php',
+			data: {
+				group_scn: groupSCN,
+				calendar: JSON.stringify(calendar_info)
+			},
+			type: 'POST',
+			success: function(result) {
+				if(result.includes("success")){
+					alert("Successfully added calendar");
+					location.reload();
+				}
+				else{
+					alert("Some error occured. Please try again");
+				}
+			}
+		});
+	});
 
 
 
