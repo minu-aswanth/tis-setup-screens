@@ -4,9 +4,7 @@ include 'dblinker.php';
 
 function delete_plan(){
 	try {
-		$group_scn = $_POST['group_scn'];
 		$plan_scn = $_POST['plan_scn'];
-		$cycle_time = $_POST['cycle_time'];
 		
 		$link = linkToTIS();
 		
