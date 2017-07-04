@@ -127,6 +127,7 @@ $(document).ready(function() {
 				$('.timetable_scn_select').append('<option value="'+ timetables[i].timetable_scn +'">'+ timetables[i].timetable_scn +'</option>')
 				$('.timetable_scn_select_event').append('<option value="'+ timetables[i].timetable_scn +'">'+ timetables[i].timetable_scn +'</option>')
 				$('.timetable_scn_select_update').append('<option value="'+ timetables[i].timetable_scn +'">'+ timetables[i].timetable_scn +'</option>')
+				$('.timetable_scn_select_event_update').append('<option value="'+ timetables[i].timetable_scn +'">'+ timetables[i].timetable_scn +'</option>')
 			}
 			$('.timetable_table tbody').append(rows);
 			$('.timetable_scn_select').change();
@@ -622,30 +623,6 @@ $(document).ready(function() {
 		});		
 	});
 
-	//function called when timetable is changed when adding calendar
-	$('.timetable_scn_select_event').change(function(){
-		var timetable_scn = $(this).val();
-		// console.log($(this)[0].id.replace('_select',''));
-		$.ajax({
-			url: '../utils/get_no_of_slots.php',
-			data :{
-				timetable_scn: timetable_scn
-			},
-			type: 'POST',
-			success: function(result) {
-				var timetableDetails = jQuery.parseJSON(result)
-				// console.log(timetableDetails);
-				var tds = '<tbody class="calendar_plan_select_event">';
-				for(var j=0; j<timetableDetails.count; j++){
-					tds += '<tr><td colspan="1" class="slot_details" slot-id="'+ timetableDetails.slots[j].SlotOrder +'">'+ timetableDetails.slots[j].StartTime +' - ' + timetableDetails.slots[j].EndTime + '</td><td colspan="1"><select class="plan_scn_select">'+ planScns +'</select></td></tr>'
-				}
-				tds += '</tbody>';
-				// console.log(tds);
-				$('.add_event_div').find('.calendar_plan_select_event').replaceWith(tds);
-			}
-		});		
-	});
-
 	$('.timetable_scn_select_update').change(function(){
 		var timetable_scn = $(this).val();
 		var day = $(this)[0].id.replace('_select_update','');
@@ -670,6 +647,54 @@ $(document).ready(function() {
 			}
 		});		
 	});
+
+	//function called when timetable is changed when adding special event
+	$('.timetable_scn_select_event').change(function(){
+		var timetable_scn = $(this).val();
+		// console.log($(this)[0].id.replace('_select',''));
+		$.ajax({
+			url: '../utils/get_no_of_slots.php',
+			data :{
+				timetable_scn: timetable_scn
+			},
+			type: 'POST',
+			success: function(result) {
+				var timetableDetails = jQuery.parseJSON(result)
+				// console.log(timetableDetails);
+				var tds = '<tbody class="calendar_plan_select_event">';
+				for(var j=0; j<timetableDetails.count; j++){
+					tds += '<tr><td colspan="1" class="slot_details" slot-id="'+ timetableDetails.slots[j].SlotOrder +'">'+ timetableDetails.slots[j].StartTime +' - ' + timetableDetails.slots[j].EndTime + '</td><td colspan="1"><select class="plan_scn_select">'+ planScns +'</select></td></tr>'
+				}
+				tds += '</tbody>';
+				// console.log(tds);
+				$('.add_event_div').find('.calendar_plan_select_event').replaceWith(tds);
+			}
+		});		
+	});
+
+	$('.timetable_scn_select_event_update').change(function(){
+		var timetable_scn = $(this).val();
+		// console.log($(this)[0].id.replace('_select',''));
+		$.ajax({
+			url: '../utils/get_no_of_slots.php',
+			data :{
+				timetable_scn: timetable_scn
+			},
+			type: 'POST',
+			success: function(result) {
+				var timetableDetails = jQuery.parseJSON(result)
+				// console.log(timetableDetails);
+				var tds = '<tbody class="calendar_plan_select_event_update">';
+				for(var j=0; j<timetableDetails.count; j++){
+					tds += '<tr><td colspan="1" class="slot_details" slot-id="'+ timetableDetails.slots[j].SlotOrder +'">'+ timetableDetails.slots[j].StartTime +' - ' + timetableDetails.slots[j].EndTime + '</td><td colspan="1"><select class="plan_scn_select">'+ planScns +'</select></td></tr>'
+				}
+				tds += '</tbody>';
+				// console.log(tds);
+				$('.update_event_div').find('.calendar_plan_select_event_update').replaceWith(tds);
+				updatingPlansInUpdateEvent();
+			}
+		});		
+	});	
 
 	//adding a new calendar
 	$('.add_calendar').click(function(){
@@ -808,14 +833,14 @@ $(document).ready(function() {
 
 	//fetch events to display in table
 	$.ajax({
-		url: '../utils/get_special_event.php',
+		url: '../utils/get_special_event_list.php',
 		type: 'POST',
 		data: {
 			group_scn: groupSCN
 		},
 		success: function(result) {
 			var events = jQuery.parseJSON(result)
-			console.log(events);
+			// console.log(events);
 			var rows = '';
 			for (var i = 0; i < events.length; i++) {
 				rows += '<tr><td colspan="1"><input type="radio" name="groups"></td><td colspan="2">'+(i+1)+'</td><td colspan="4">'+events[i].day+'</td><td colspan="4">'+events[i].timetable_scn+'</td><td colspan="4">'
@@ -852,6 +877,67 @@ $(document).ready(function() {
 			success: function(result) {
 				if(result.includes("success")){
 					alert("Successfully added special event");
+					location.reload();
+				}
+				else{
+					alert("Some error occured. Please try again");
+				}
+			}
+		});
+	});
+
+	//updating event
+	update_event_modal = function(){
+		try{
+			var date = $('input[name=groups]:checked').closest('tr').find('td')[2].innerHTML
+			var timetable_scn = $('input[name=groups]:checked').closest('tr').find('td')[3].innerHTML			
+			$(".event_date_update").val(date);
+			$(".timetable_scn_select_event_update").val(timetable_scn);
+			$('.timetable_scn_select_event_update').change();
+			// $($('input[name=groups]:checked').closest('tr').find('span')).each(function(){
+			// 	console.log($(".calendar_plan_select_event_update select"));
+			// 	console.log($(this)[0].innerHTML);
+			// })
+			// console.log(timetable_scn);
+		}
+		catch(err){
+			alert("Please select a special event to edit");
+		}	
+	}
+
+	updatingPlansInUpdateEvent = function(){
+		var count = 0;
+		$($('input[name=groups]:checked').closest('tr').find('span')).each(function(){
+			$(".calendar_plan_select_event_update select")[count].value = $(this)[0].innerHTML;
+			count++;
+		})
+		$("#update_event_modal").modal()
+	}
+
+	$('.update_event').click(function(){
+		var event_date = $(".event_date_update").val();
+		var timetable_scn = $(".timetable_scn_select_event_update").val();
+		var plan_info = [];
+		$($(".calendar_plan_select_event_update").find("tr")).each(function(){
+			var obj = {};				
+			obj.plan_scn = $(this).find('select').val(); 
+			obj.slot_order = $(this).find('.slot_details').attr("slot-id");
+			plan_info.push(obj);
+		});
+		// console.log(plan_info);
+		
+		$.ajax({
+			url: '../utils/update_special_event.php',
+			data: {
+				group_scn: groupSCN,
+				event_date: event_date,
+				timetable_scn: timetable_scn,
+				calendar: JSON.stringify(plan_info)
+			},
+			type: 'POST',
+			success: function(result) {
+				if(result.includes("success")){
+					alert("Successfully updated special event");
 					location.reload();
 				}
 				else{
