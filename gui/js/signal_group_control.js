@@ -807,25 +807,25 @@ $(document).ready(function() {
 	}
 
 	//fetch events to display in table
-	// $.ajax({
-	// 	url: '../utils/get_calendar.php',
-	// 	type: 'POST',
-	// 	data: {
-	// 		group_scn: groupSCN
-	// 	},
-	// 	success: function(result) {
-	// 		var events = jQuery.parseJSON(result)
-	// 		console.log(events);
-	// 		var rows = '';
-	// 		for (var i = 0; i < events.length; i++) {
-	// 			rows += '<tr><td colspan="2">'+(i+1)+'</td><td colspan="4">'+calendars[i].day+'</td><td colspan="4">'+calendars[i].timetable_scn+'</td><td colspan="4">'
-	// 			for(var j = 0; j < calendars[i].plan_info.length; j++)
-	// 				rows += '<span class="plan_scns_calendar">' + calendars[i].plan_info[j].Plan_SCN + '</span> '
-	// 			rows+='</td></tr>'
-	// 		}
-	// 		$('.calendar_table tbody').append(rows);
-	// 	}
-	// });
+	$.ajax({
+		url: '../utils/get_special_event.php',
+		type: 'POST',
+		data: {
+			group_scn: groupSCN
+		},
+		success: function(result) {
+			var events = jQuery.parseJSON(result)
+			console.log(events);
+			var rows = '';
+			for (var i = 0; i < events.length; i++) {
+				rows += '<tr><td colspan="1"><input type="radio" name="groups"></td><td colspan="2">'+(i+1)+'</td><td colspan="4">'+events[i].day+'</td><td colspan="4">'+events[i].timetable_scn+'</td><td colspan="4">'
+				for(var j = 0; j < events[i].plan_info.length; j++)
+					rows += '<span class="plan_scns_event">' + events[i].plan_info[j].Plan_SCN + '</span> '
+				rows+='</td></tr>'
+			}
+			$('.event_table tbody').append(rows);
+		}
+	});
 
 	//add event
 	$('.add_event').click(function(){

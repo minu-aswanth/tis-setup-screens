@@ -74,6 +74,9 @@
 		.plan_scns_calendar{
 			background-color: orange;
 		}
+		.plan_scns_event{
+			background-color: orange;
+		}
 		#add_calendar_modal > .modal-dialog > .modal-content{
 			width: 750px;
 		}
@@ -937,6 +940,51 @@
 </div>
 
 <div class="modal fade" id="add_event_modal" role="dialog">
+	<div class="modal-dialog">
+  		<div class="modal-content">
+  			<button id="cancelModal" type="submit" class="btn btn-danger btn-default pull-left" data-dismiss="modal">
+  				<span class="glyphicon glyphicon-remove"></span> Cancel
+  			</button>
+    		<div class="modal-header" style="padding:10px 50px;">
+	  			<h3>Add Event</h3>
+    		</div>
+    		<div class="modal-body table-responsive" style="padding:0px 50px;">
+    			<div class="add_event_div"><br>
+    				<table class="table table-bordered">
+						<tbody class="plans_body">
+							<tr>
+								<td colspan="1">Event Date</td>
+								<td colspan="1"><input type="date" class="event_date form-control"></td>
+							</tr>												
+						</tbody>
+					</table>
+    				<table class="table table-bordered">
+						<tbody>
+							<tr>
+								<td colspan="1">Timetable SCN</td>
+								<td colspan="1"><select class="timetable_scn_select_event"></select></td>
+							</tr>
+						</tbody>
+					</table>
+					<table class="table table-bordered">
+						<thead>
+							<tr>
+								<td colspan="1">Slot</td>
+								<td colspan="1">Plan</td>
+							</tr>
+						</thead>
+						<tbody class="calendar_plan_select_event"></tbody>
+					</table>    				
+					
+					<button class="btn btn-danger add_event">Add Event</button>
+				</div>
+				<br><br><br>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="update_event_modal" role="dialog">
 	<div class="modal-dialog">
   		<div class="modal-content">
   			<button id="cancelModal" type="submit" class="btn btn-danger btn-default pull-left" data-dismiss="modal">
