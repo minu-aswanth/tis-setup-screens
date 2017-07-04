@@ -947,6 +947,33 @@ $(document).ready(function() {
 		});
 	});
 
+	//deleting event
+	delete_event_modal = function(){
+		try{
+			var date = $('input[name=groups]:checked').closest('tr').find('td')[2].innerHTML
+			$.ajax({
+				url: '../utils/delete_special_event.php',
+				data: {
+					group_scn: groupSCN,
+					event_date: date
+				},
+				type: 'POST',
+				success: function(result) {
+					if(result.includes("success")){
+						alert("Successfully deleted special event");
+						location.reload();
+					}
+					else{
+						alert("Some error occured. Please try again");
+					}
+				}
+			});	
+		}
+		catch(err){
+			alert("Please select a special event to delete");
+		}		
+	}
+
 
 	//not used yet
 	//to get details and display in the update bus modal
