@@ -5,6 +5,7 @@ $(document).ready(function() {
 	var allSignalsSCN = [];
 	var planScns = '';
 	var startingTimetableCount = 0;
+	var signalOptions = '';
 
 	//getting all signals initially to display in the table
 	$.ajax({
@@ -16,7 +17,6 @@ $(document).ready(function() {
 		success: function(result) {
 			var addedSignals = $.parseJSON(result);
 			// console.log(addedSignals);
-			var signalOptions = '';
 			for (var i = 0; i < addedSignals.length; i++) {
 				signalOptions += '<option value="'+ addedSignals[i].SCN +'">'+ addedSignals[i].SCN +'</option>'
 				allSignalsSCN.push(addedSignals[i].SCN);
@@ -57,7 +57,7 @@ $(document).ready(function() {
 		type: 'POST',
 		success: function(result) {
 			var signals = $.parseJSON(result);
-			// console.log(signals);
+			console.log(signals);
 			for (var i = 0; i < signals.length; i++) {
 				$('.signal_scn_select').append('<option value='+ signals[i].SCN +'>'+ signals[i].SCN +'</option>')				
 			}
@@ -67,13 +67,81 @@ $(document).ready(function() {
 	//adding a new signal
 	$('.add_signal').click(function(){
 		var signal_scn = $('.signal_scn_select').val();
-		var data = {
-			signal_scn: signal_scn,
-			group_scn: groupSCN
-		}
+		// var plan_scn = $(".plan_scn").val();
+		// var cycle_time = $(".cycle_time").val();
+		// if(cycle_time == ""){
+		// 	alert("Please Enter Cycle Time");
+		// 	return false;
+		// }
+		// var stages_info = [];
+		// var offset_info = [];
+		// var allSignalsInPlan = [];
+		
+		var count = 0;
+		var plan_info = [];
+		$($(".up_phases_tabs_signal").find('a')).each(function(){
+			var plan_scn = this.innerHTML;
+			var cycle_time = $("#up_menu_signal" + count).attr("cycle-time");
+			console.log(cycle_time);
+			var obj = {};
+			obj.plan_scn = plan_scn;
+			var totalTime = 0;
+			var timings = [];
+			$($("#up_menu_signal" + count + " .up_stage_timings_signal").find('input')).each(function(){
+				// console.log($(this).val());
+				timings.push($(this).val());
+				totalTime += parseInt($(this).val());
+			});
+			// // console.log(totalTime);
+			if(totalTime != cycle_time){
+				alert("The sum of stage times is not equal to the cycle time");
+				return false;
+			}
+			obj.timings = timings;
+			var obj2 = {};			
+			obj2.start_signal_scn = $("#up_menu_signal" + count + " .offset_start_signal").val();
+			obj2.end_signal_scn = $("#up_menu_signal" + count + " .offset_end_signal").val();
+			obj2.offset_time = $("#up_menu_signal" + count + " .offset_time_signal").val();
+			obj.offset_info = obj2;
+			plan_info.push(obj);			
+			count++;
+		});
+		console.log(plan_info);
+		// $($(".offset_info_container_tbody").find('tr')).each(function(){
+		// 	var start_signal_scn = $(this).find('select')[0].value;
+		// 	var end_signal_scn = $(this).find('select')[1].value;
+		// 	var offset_time = $(this).find('input').val();
+		// 	if(start_signal_scn == end_signal_scn){
+		// 		alert("Start and end signal cannot be same");
+		// 		return false;
+		// 	}
+		// 	if(offset_time == ""){
+		// 		alert("Please Enter Offset Time");
+		// 		return false;
+		// 	}
+		// 	var found = jQuery.inArray(start_signal_scn, allSignalsInPlan);
+		// 	if(found < 0)
+		// 		allSignalsInPlan.push(start_signal_scn);
+		// 	var found = jQuery.inArray(end_signal_scn, allSignalsInPlan);
+		// 	if(found < 0)
+		// 		allSignalsInPlan.push(end_signal_scn);
+		// 	var obj = {};
+		// 	obj.start_signal_scn = start_signal_scn;
+		// 	obj.end_signal_scn = end_signal_scn;
+		// 	obj.offset_time = offset_time;
+		// 	offset_info.push(obj);
+		// });
+		// if(allSignalsSCN.length != allSignalsInPlan.length){
+		// 	alert("Offset information is insufficient");
+		// 	return false;
+		// }
 		$.ajax({
 			url: '../utils/update_signal_group.php',
-			data: data,
+			data: {
+				signal_scn: signal_scn,
+				group_scn: groupSCN,
+				plan_info: plan_info
+			},
 			type: 'POST',
 			success: function(result) {
 				if(result.includes("success")){
@@ -332,12 +400,60 @@ $(document).ready(function() {
 		},
 		success: function(result) {
 			var plans = jQuery.parseJSON(result)
-			// console.log(plans);
+			console.log(plans);
+			if(plans.length == 0){
+				$("#new_signal_existing_plan_div").css('display', 'none');
+			}
 			for (var i = 0; i < plans.length; i++) {
+				if(i == 0){
+					var divs = '<div id="up_menu_signal'+i+'" cycle-time="'+ plans[i].CycleTime +'" class="tab-pane fade active in"><table class="table table-bordered"><thead><tr><td colspan="1">Stage</td><td colspan="1">Time(in seconds)</td></tr></thead><tbody class="up_stage_timings_signal"></tbody></table><h3>Offset Information</h3><div class="offset_info_container_signal'+ i +'"><table class="table table-bordered"><thead><tr><td colspan="1">Signal 1</td><td colspan="1">Signal 2</td><td colspan="1">Offset time(in seconds)</td></tr></thead><tbody>';
+					for(var j = 0; j < plans[i].Offsets.length; j++)
+						divs += '<tr><td><input type="text" disabled value="'+ plans[i].Offsets[j].Origin_Signal_SCN +'"></td><td><input type="text" disabled value="'+ plans[i].Offsets[j].Destination_Signal_SCN +'"></td><td><input style="width:150px" disabled type="number" value="'+ plans[i].Offsets[j].OffsetTime +'"></td></tr>';
+					divs += '<tr><td><select class="offset_start_signal">' + signalOptions + '</select></td><td><select class="offset_end_signal">' + signalOptions + '</select></td><td><input class="offset_time_signal" style="width:150px" type="number"></td></tr>';
+					divs += '</tbody></table></div></div>'
+					$('.up_tab_signal').append(divs)
+					$('.up_phases_tabs_signal').append('<li class="active"><a data-toggle="pill" href="#up_menu_signal'+i+'">'+plans[i].PlanSCN+'</a></li>')
+				}
+				else{
+					var divs = '<div id="up_menu_signal'+i+'" cycle-time="'+ plans[i].CycleTime +'" class="tab-pane fade"><table class="table table-bordered"><thead><tr><td colspan="1">Stage</td><td colspan="1">Time(in seconds)</td></tr></thead><tbody class="up_stage_timings_signal"></tbody></table><h3>Offset Information</h3><div class="offset_info_container_signal'+ i +'"><table class="table table-bordered"><thead><tr><td colspan="1">Signal 1</td><td colspan="1">Signal 2</td><td colspan="1">Offset time(in seconds)</td></tr></thead><tbody>';
+					for(var j = 0; j < plans[i].Offsets.length; j++)
+						divs += '<tr><td><input type="text" disabled value="'+ plans[i].Offsets[j].Origin_Signal_SCN +'"></td><td><input type="text" disabled value="'+ plans[i].Offsets[j].Destination_Signal_SCN +'"></td><td><input style="width:150px" disabled type="number" value="'+ plans[i].Offsets[j].OffsetTime +'"></td></tr>';
+					divs += '<tr><td><select class="offset_start_signal">' + signalOptions + '</select></td><td><select class="offset_end_signal">' + signalOptions + '</select></td><td><input class="offset_time_signal" style="width:150px" type="number"></td></tr>';
+					divs += '</tbody></table></div></div>'
+					$('.up_tab_signal').append(divs)
+					$('.up_phases_tabs_signal').append('<li><a data-toggle="pill" href="#up_menu_signal'+i+'">'+plans[i].PlanSCN+'</a></li>')
+				}
 				$('.plan_table tbody').append('<tr><td colspan="1"><input type="radio" name="groups"></td><td colspan="2">'+(i+1)+'</td><td colspan="4">'+plans[i].PlanSCN+'</td><td colspan="4">'+plans[i].CycleTime+'</td></tr>')
 				planScns += '<option value="'+ plans[i].PlanSCN +'">'+ plans[i].PlanSCN +'</option>'
 			}
+			$(".signal_scn_select").change();
 		}
+	});
+
+	$(".signal_scn_select").change(function(){
+		$(".extraSignal").remove();
+		$(".offset_start_signal").append('<option class="extraSignal" value="' + $(this).val() + '">' + $(this).val() + '</option>');
+		$(".offset_end_signal").append('<option class="extraSignal" value="' + $(this).val() + '">' + $(this).val() + '</option>');
+		// console.log($(this).val());
+		var signal_scn = $(this).val();
+		$.ajax({
+			url: '../utils/get_no_of_stages.php',
+			data :{
+				signal_scn: signal_scn
+			},
+			type: 'POST',
+			success: function(result) {
+				var noOfStages = $.parseJSON(result);
+				console.log(noOfStages);
+				var rows = '<tbody class="up_stage_timings_signal">';
+				for (var j = 1; j <= noOfStages; j++) {
+					rows += '<tr><td colspan="1">Stage - '+j+'</td><td colspan="1"><input type="number" placeholder="Enter Stage '+j+' Time" class="up_stage_'+j+'"</td></tr>';		
+				}
+				rows += '</tbody>';
+				$('.up_stage_timings_signal').replaceWith(rows);
+			}
+		});
+		
 	});
 
 	//adding a new plan
@@ -587,7 +703,7 @@ $(document).ready(function() {
 		},
 		success: function(result) {
 			var calendars = jQuery.parseJSON(result)
-			console.log(calendars);
+			// console.log(calendars);
 			var rows = '';
 			for (var i = 0; i < calendars.length; i++) {
 				rows += '<tr><td colspan="2">'+(i+1)+'</td><td colspan="4">'+calendars[i].day+'</td><td colspan="4">'+calendars[i].timetable_scn+'</td><td colspan="4">'
@@ -972,158 +1088,6 @@ $(document).ready(function() {
 		catch(err){
 			alert("Please select a special event to delete");
 		}		
-	}
-
-
-	//not used yet
-	//to get details and display in the update bus modal
-	update_bus_modal = function(){
-		var bus_registration_number = $('input[name=groups]:checked').closest('tr').find('td')[2].innerHTML;
-		var depo_id = $('input[name=groups]:checked').closest('tr').find('td')[3].innerHTML;
-		var scu_phone_number = $('input[name=groups]:checked').closest('tr').find('td')[5].innerHTML;
-		console.log(depo_id);
-		$('.bus_registration_number_update').val(bus_registration_number);
-		$('.depo_name_select_update').val(depo_id);
-		$('.scu_phone_number_update').val(scu_phone_number);
-		$("#update_bus_modal").modal();
-	}
-
-	//button to update buses
-	$('.update_bus').click(function(){
-		var bus_registration_number = $('.bus_registration_number_update').val();
-		var depo_id = $('.depo_name_select_update').val();
-		var scu_phone_number = $('.scu_phone_number_update').val();
-		var data = {
-			regno: bus_registration_number,
-			phoneno: scu_phone_number,
-			depoid: depo_id
-		}
-		$.ajax({
-			url: 'utils/update_bus.php',
-			data: data,
-			type: 'POST',
-			success: function(result) {
-				if(result.includes("success")){
-					alert("Bus updated successfully");
-					location.reload();
-				}
-				else{
-					alert("Some error occured. Please try again");
-				}
-			}
-		});
-	})
-
-	//gets triggered when delete bus button is clicked
-	delete_bus_modal = function(){
-		var bus_registration_number = $('input[name=groups]:checked').closest('tr').find('td')[2].innerHTML;
-		$.ajax({
-			url: 'utils/delete_bus.php',
-			data :{regno:bus_registration_number},
-			type: 'POST',
-			success: function(result) {
-				if(result.includes("success")){
-					alert("Bus deleted successfully");
-					location.reload();
-				}
-				else{
-					alert("Some error occured. Please try again");
-				}
-			}
-		});
-	}
-
-	//adding a new bus
-	$('.add_depo').click(function(){
-		var depo_name = $('.depo_name').val();
-		var depo_lat = $('.depo_lat').val();
-		var depo_long = $('.depo_long').val();
-		var operator_phone_numbers = $('.operator_phone_numbers').val();
-		var data = {
-			name: depo_name,
-			latitude: depo_lat,
-			longitude: depo_long,
-			contactno: operator_phone_numbers
-		}
-		$.ajax({
-			url: 'utils/add_depo.php',
-			data: data,
-			type: 'POST',
-			success: function(result) {
-				if(result.includes("success")){
-					alert("Successfully added depo");
-					location.reload();
-				}
-				else{
-					alert("Some error occured. Please try again");
-				}
-			}
-		});
-	});
-
-	//to get details and display in the update depo modal
-	update_depo_modal = function(){
-		var depo_name = $('input[name=groups]:checked').closest('tr').find('td')[2].innerHTML;
-		var depo_id = $('input[name=groups]:checked').closest('tr').find('td')[3].innerHTML;
-		var depo_lat = $('input[name=groups]:checked').closest('tr').find('td')[4].innerHTML;
-		var depo_long = $('input[name=groups]:checked').closest('tr').find('td')[5].innerHTML;
-		var operator_phone_numbers = $('input[name=groups]:checked').closest('tr').find('td')[6].innerHTML;
-		console.log(depo_id);
-		$('.depo_id_update').val(depo_id);
-		$('.depo_name_update').val(depo_name);
-		$('.depo_lat_update').val(depo_lat);
-		$('.depo_long_update').val(depo_long);
-		$('.operator_phone_numbers_update').val(operator_phone_numbers);
-		$("#update_depo_modal").modal();
-	}
-
-	//button to update buses
-	$('.update_depo').click(function(){
-		var depo_name = $('.depo_name_update').val();
-		var depo_id = $('.depo_id_update').val();
-		var depo_lat = $('.depo_lat_update').val();
-		var depo_long = $('.depo_long_update').val();
-		var operator_phone_numbers = $('.operator_phone_numbers_update').val();
-		var data = {
-			depoid: depo_id,
-			name: depo_name,
-			latitude: depo_lat,
-			longitude: depo_long,
-			contactno: operator_phone_numbers
-		}
-		$.ajax({
-			url: 'utils/update_depo.php',
-			data: data,
-			type: 'POST',
-			success: function(result) {
-				if(result.includes("success")){
-					alert("Depo updated successfully");
-					location.reload();
-				}
-				else{
-					alert("Some error occured. Please try again");
-				}
-			}
-		});
-	})
-
-	//gets triggered when delete depo button is clicked
-	delete_depo_modal = function(){
-		var depo_id = $('input[name=groups]:checked').closest('tr').find('td')[3].innerHTML;
-		$.ajax({
-			url: 'utils/delete_depo.php',
-			data :{depoid:depo_id},
-			type: 'POST',
-			success: function(result) {
-				if(result.includes("success")){
-					alert("Depo deleted successfully");
-					location.reload();
-				}
-				else{
-					alert("Some error occured. Please try again");
-				}
-			}
-		});
 	}
 
 });
