@@ -18,7 +18,8 @@ function update_group(){
 		$row = $handle->fetch(PDO::FETCH_ASSOC);
 		$signal_id = $row["SignalID"];
 
-		$plan_info = json_decode($_POST['signal_scn']);
+		$plan_info = json_decode($_POST['plan_info']);
+		print_r($plan_info);
 		foreach ($plan_info as $plan) {
 			$plan_scn = $plan->plan_scn;
 			$i = 1;
