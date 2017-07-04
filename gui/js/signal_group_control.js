@@ -79,6 +79,7 @@ $(document).ready(function() {
 		
 		var count = 0;
 		var plan_info = [];
+		var check = 0;
 		$($(".up_phases_tabs_signal").find('a')).each(function(){
 			var plan_scn = this.innerHTML;
 			var cycle_time = $("#up_menu_signal" + count).attr("cycle-time");
@@ -94,6 +95,7 @@ $(document).ready(function() {
 			});
 			// // console.log(totalTime);
 			if(totalTime != cycle_time){
+				check = 1;
 				alert("The sum of stage times is not equal to the cycle time");
 				return false;
 			}
@@ -103,14 +105,17 @@ $(document).ready(function() {
 			var end_signal_scn = $("#up_menu_signal" + count + " .offset_end_signal").val();
 			var offset_time = $("#up_menu_signal" + count + " .offset_time_signal").val();	
 			if(start_signal_scn == end_signal_scn){
+				check = 1;
 				alert("Start and end signal cannot be same");
 				return false;
 			}
 			if(offset_time == ""){
+				check = 1;
 				alert("Please Enter Offset Time");
 				return false;
 			}
 			if(start_signal_scn != signal_scn && end_signal_scn != signal_scn){
+				check = 1;
 				alert("Offset information is insufficient");
 				return false;
 			}
@@ -122,24 +127,26 @@ $(document).ready(function() {
 			count++;
 		});
 		// console.log(plan_info);
-		$.ajax({
-			url: '../utils/update_signal_group.php',
-			data: {
-				signal_scn: signal_scn,
-				group_scn: groupSCN,
-				plan_info: JSON.stringify(plan_info)
-			},
-			type: 'POST',
-			success: function(result) {
-				if(result.includes("success")){
-					alert("Successfully added signal");
-					location.reload();
+		if(check == 0){
+			$.ajax({
+				url: '../utils/update_signal_group.php',
+				data: {
+					signal_scn: signal_scn,
+					group_scn: groupSCN,
+					plan_info: JSON.stringify(plan_info)
+				},
+				type: 'POST',
+				success: function(result) {
+					if(result.includes("success")){
+						alert("Successfully added signal");
+						location.reload();
+					}
+					else{
+						alert("Some error occured. Please try again");
+					}
 				}
-				else{
-					alert("Some error occured. Please try again");
-				}
-			}
-		});
+			});
+		}		
 	});
 
 	//removing a signal from signal group
