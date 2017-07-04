@@ -34,14 +34,14 @@ function update_group(){
 				$i++;
 			}
 
-			foreach ($plan_info->offset_info as $offset) {
-				$handle=$link->prepare("INSERT INTO `offsets`(`Plan_SCN`, `Origin_Signal_SCN`, `Destination_Signal_SCN`, `OffsetTime`) VALUES (:plan_scn, :origin_signal_scn, :destination_signal_scn, :offset_time)");
-				$handle->bindParam(':plan_scn', $plan_scn);
-				$handle->bindParam(':origin_signal_scn', $offset->start_signal_scn);
-				$handle->bindParam(':destination_signal_scn', $offset->end_signal_scn);
-				$handle->bindParam(':offset_time', $offset->offset_time);
-				$handle->execute();
-			}
+			$offset = $plan->offset_info;
+			$handle=$link->prepare("INSERT INTO `offsets`(`Plan_SCN`, `Origin_Signal_SCN`, `Destination_Signal_SCN`, `OffsetTime`) VALUES (:plan_scn, :origin_signal_scn, :destination_signal_scn, :offset_time)");
+			$handle->bindParam(':plan_scn', $plan_scn);
+			$handle->bindParam(':origin_signal_scn', $offset->start_signal_scn);
+			$handle->bindParam(':destination_signal_scn', $offset->end_signal_scn);
+			$handle->bindParam(':offset_time', $offset->offset_time);
+			$handle->execute();
+		
 		}
 		
 		return "success";
