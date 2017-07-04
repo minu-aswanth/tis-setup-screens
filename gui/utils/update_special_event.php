@@ -2,7 +2,7 @@
 
 include 'dblinker.php';
 
-function add_special_event(){
+function update_special_event(){
 	try {
 		$calendar = json_decode($_POST['calendar']);
 		$group_scn = $_POST['group_scn'];
@@ -10,6 +10,11 @@ function add_special_event(){
 		$timetable_scn = $_POST['timetable_scn'];
 		
 		$link = linkToTIS();
+
+		$handle=$link->prepare("DELETE FROM `group_scn` WHERE `Group_SCN` = :group_scn AND 'Date' = :event_date");
+		$handle->bindParam(':event_date', $event_date);
+		$handle->bindParam(':group_scn', $group_scn);
+		$handle->execute();
 	
 		foreach ($calendar as $plan) {
 			$handle=$link->prepare("INSERT INTO `special_event` (`Date`, `Group_SCN`, `TimeTable_SCN`, `slot_order`, `Plan_SCN`) VALUES (:date_day, :group_scn, :timetable_scn, :slot_order, :plan_scn )");
@@ -28,5 +33,5 @@ function add_special_event(){
         return "F";
     }
 }
-echo add_special_event();
+echo update_special_event();
 ?>
