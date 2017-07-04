@@ -98,49 +98,36 @@ $(document).ready(function() {
 				return false;
 			}
 			obj.timings = timings;
-			var obj2 = {};			
-			obj2.start_signal_scn = $("#up_menu_signal" + count + " .offset_start_signal").val();
-			obj2.end_signal_scn = $("#up_menu_signal" + count + " .offset_end_signal").val();
-			obj2.offset_time = $("#up_menu_signal" + count + " .offset_time_signal").val();
+			var obj2 = {};
+			var start_signal_scn = $("#up_menu_signal" + count + " .offset_start_signal").val();
+			var end_signal_scn = $("#up_menu_signal" + count + " .offset_end_signal").val();
+			var offset_time = $("#up_menu_signal" + count + " .offset_time_signal").val();	
+			if(start_signal_scn == end_signal_scn){
+				alert("Start and end signal cannot be same");
+				return false;
+			}
+			if(offset_time == ""){
+				alert("Please Enter Offset Time");
+				return false;
+			}
+			if(start_signal_scn != signal_scn && end_signal_scn != signal_scn){
+				alert("Offset information is insufficient");
+				return false;
+			}
+			obj2.start_signal_scn = start_signal_scn;
+			obj2.end_signal_scn = end_signal_scn;
+			obj2.offset_time = offset_time;
 			obj.offset_info = obj2;
 			plan_info.push(obj);			
 			count++;
 		});
-		console.log(plan_info);
-		// $($(".offset_info_container_tbody").find('tr')).each(function(){
-		// 	var start_signal_scn = $(this).find('select')[0].value;
-		// 	var end_signal_scn = $(this).find('select')[1].value;
-		// 	var offset_time = $(this).find('input').val();
-		// 	if(start_signal_scn == end_signal_scn){
-		// 		alert("Start and end signal cannot be same");
-		// 		return false;
-		// 	}
-		// 	if(offset_time == ""){
-		// 		alert("Please Enter Offset Time");
-		// 		return false;
-		// 	}
-		// 	var found = jQuery.inArray(start_signal_scn, allSignalsInPlan);
-		// 	if(found < 0)
-		// 		allSignalsInPlan.push(start_signal_scn);
-		// 	var found = jQuery.inArray(end_signal_scn, allSignalsInPlan);
-		// 	if(found < 0)
-		// 		allSignalsInPlan.push(end_signal_scn);
-		// 	var obj = {};
-		// 	obj.start_signal_scn = start_signal_scn;
-		// 	obj.end_signal_scn = end_signal_scn;
-		// 	obj.offset_time = offset_time;
-		// 	offset_info.push(obj);
-		// });
-		// if(allSignalsSCN.length != allSignalsInPlan.length){
-		// 	alert("Offset information is insufficient");
-		// 	return false;
-		// }
+		// console.log(plan_info);
 		$.ajax({
 			url: '../utils/update_signal_group.php',
 			data: {
 				signal_scn: signal_scn,
 				group_scn: groupSCN,
-				plan_info: plan_info
+				plan_info: JSON.stringify(plan_info)
 			},
 			type: 'POST',
 			success: function(result) {
