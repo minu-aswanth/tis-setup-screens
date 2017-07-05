@@ -628,9 +628,13 @@ $(document).ready(function() {
 			obj.signal_id = signal_id;
 			var timings = [];
 			var totalTime = 0;
-			$($("#up_menu_update" + count).find('input')).each(function(){
+			var inter_stage_timings = [];
+			$($("#up_menu_update" + count  + " .up_stage_timings").find('input')).each(function(){
 				timings.push($(this).val());
 				totalTime += parseInt($(this).val());
+			});
+			$($("#up_menu_update" + count + " .inter_stage_timings").find('input')).each(function(){
+				inter_stage_timings.push($(this).val());
 			});
 			// console.log(totalTime);
 			if(totalTime != cycle_time){
@@ -638,6 +642,8 @@ $(document).ready(function() {
 				return false;
 			}
 			obj.timings = timings;
+			obj.inter_stage_timings = inter_stage_timings;
+
 			stages_info.push(obj);
 			count++;
 		});
