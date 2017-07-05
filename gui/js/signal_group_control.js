@@ -26,8 +26,8 @@ $(document).ready(function() {
 			for (var i = 0; i < addedSignals.length; i++) {
 				$('.signal_table tbody').append('<tr><td colspan="1"><input type="radio" name="groups"></td><td colspan="2">'+(i+1)+'</td><td colspan="4">'+addedSignals[i].SCN+'</td><td colspan="4">'+addedSignals[i].ShortDescription+'</td></tr>');				
 				if(i==0){
-					var divs = '<div id="up_menu'+i+'" class="tab-pane fade active in"><table class="table table-bordered"><thead><tr><td colspan="1">Stage</td><td colspan="1">Time(in seconds)</td></tr></thead><tbody class="up_stage_timings"></tbody></table></div>'
-					var divs_update = '<div id="up_menu_update'+i+'" class="tab-pane fade active in"><table class="table table-bordered"><thead><tr><td colspan="1">Stage</td><td colspan="1">Time(in seconds)</td></tr></thead><tbody class="up_stage_timings"></tbody></table></div>'
+					var divs = '<div id="up_menu'+i+'" class="tab-pane fade active in"><table class="table table-bordered"><thead><tr><td colspan="1">Stage</td><td colspan="1">Time(in seconds)</td></tr></thead><tbody class="up_stage_timings"></tbody></table><h3>Interstage Timings</h3><table class="table table-bordered"><thead><tr><td colspan="1">Start Stage</td><td colspan="1">End Stage</td><td colspan="1">Time(in seconds)</td></tr></thead><tbody class="inter_stage_timings"></tbody></table></div>'
+					var divs_update = '<div id="up_menu_update'+i+'" class="tab-pane fade active in"><table class="table table-bordered"><thead><tr><td colspan="1">Stage</td><td colspan="1">Time(in seconds)</td></tr></thead><tbody class="up_stage_timings"></tbody></table><h3>Interstage Timings</h3><table class="table table-bordered"><thead><tr><td colspan="1">Start Stage</td><td colspan="1">End Stage</td><td colspan="1">Time(in seconds)</td></tr></thead><tbody class="inter_stage_timings"></tbody></table></div>'
 					$('.up_tab').append(divs)
 					$('.up_tab_update').append(divs_update)
 					$('.up_phases_tabs').append('<li class="active"><a data-toggle="pill" signal-id='+ addedSignals[i].SignalID +' href="#up_menu0">'+addedSignals[i].SCN+'</a></li>')
@@ -36,8 +36,8 @@ $(document).ready(function() {
 				else{
 					$('.offset_info_container_tbody').append('<tr><td><select>'+ signalOptions +'</select></td><td><select>'+ signalOptions +'</select></td><td><input style="width:150px" type="number"></td></tr>');
 					$('.offset_info_container_update_tbody').append('<tr><td><select>'+ signalOptions +'</select></td><td><select>'+ signalOptions +'</select></td><td><input style="width:150px" type="number"></td></tr>');
-					var divs = '<div id="up_menu'+i+'" class="tab-pane fade"><table class="table table-bordered"><thead><tr><td colspan="1">Stage</td><td colspan="1">Time(in seconds)</td></tr></thead><tbody class="up_stage_timings"></tbody></table></div>'
-					var divs_update = '<div id="up_menu_update'+i+'" class="tab-pane fade"><table class="table table-bordered"><thead><tr><td colspan="1">Stage</td><td colspan="1">Time(in seconds)</td></tr></thead><tbody class="up_stage_timings"></tbody></table></div>'
+					var divs = '<div id="up_menu'+i+'" class="tab-pane fade"><table class="table table-bordered"><thead><tr><td colspan="1">Stage</td><td colspan="1">Time(in seconds)</td></tr></thead><tbody class="up_stage_timings"></tbody></table><h3>Interstage Timings</h3><table class="table table-bordered"><thead><tr><td colspan="1">Start Stage</td><td colspan="1">End Stage</td><td colspan="1">Time(in seconds)</td></tr></thead><tbody class="inter_stage_timings"></tbody></table></div>'
+					var divs_update = '<div id="up_menu_update'+i+'" class="tab-pane fade"><table class="table table-bordered"><thead><tr><td colspan="1">Stage</td><td colspan="1">Time(in seconds)</td></tr></thead><tbody class="up_stage_timings"></tbody></table><h3>Interstage Timings</h3><table class="table table-bordered"><thead><tr><td colspan="1">Start Stage</td><td colspan="1">End Stage</td><td colspan="1">Time(in seconds)</td></tr></thead><tbody class="inter_stage_timings"></tbody></table></div>'
 					$('.up_tab').append(divs)
 					$('.up_tab_update').append(divs_update)
 					$('.up_phases_tabs').append('<li><a data-toggle="pill" signal-id='+ addedSignals[i].SignalID +' href="#up_menu'+i+'">'+addedSignals[i].SCN+'</a></li>')
@@ -45,6 +45,14 @@ $(document).ready(function() {
 				}
 				for (var j = 1; j <= addedSignals[i].StagesNumber; j++) {
 					$('#up_menu' + i).find('.up_stage_timings').append('<tr><td colspan="1">Stage - '+j+'</td><td colspan="1"><input type="number" placeholder="Enter Stage '+j+' Time" class="up_stage_'+j+'"</td></tr>');		
+					if(j != addedSignals[i].StagesNumber){
+						$('#up_menu' + i).find('.inter_stage_timings').append('<tr><td colspan="1">Stage - '+j+'</td><td colspan="1">Stage - '+(j+1)+'</td><td colspan="1"><input style="width:150px" type="number" placeholder="Enter Interstage Time" class="inter_stage_'+j+'"</td></tr>');		
+						$('#up_menu_update' + i).find('.inter_stage_timings').append('<tr><td colspan="1">Stage - '+j+'</td><td colspan="1">Stage - '+(j+1)+'</td><td colspan="1"><input style="width:150px" type="number" placeholder="Enter Interstage Time" class="inter_stage_'+j+'"</td></tr>');		
+					}
+					else{
+						$('#up_menu' + i).find('.inter_stage_timings').append('<tr><td colspan="1">Stage - '+j+'</td><td colspan="1">Stage - '+1+'</td><td colspan="1"><input style="width:150px" type="number" placeholder="Enter Interstage Time" class="inter_stage_'+j+'"</td></tr>');		
+						$('#up_menu_update' + i).find('.inter_stage_timings').append('<tr><td colspan="1">Stage - '+j+'</td><td colspan="1">Stage - '+(j+1)+'</td><td colspan="1"><input style="width:150px" type="number" placeholder="Enter Interstage Time" class="inter_stage_'+j+'"</td></tr>');		
+					}
 					$('#up_menu_update' + i).find('.up_stage_timings').append('<tr><td colspan="1">Stage - '+j+'</td><td colspan="1"><input type="number" placeholder="Enter Stage '+j+' Time" class="up_stage_'+j+'"</td></tr>');		
 				}
 			}
@@ -88,6 +96,7 @@ $(document).ready(function() {
 			obj.plan_scn = plan_scn;
 			var totalTime = 0;
 			var timings = [];
+			var inter_stage_timings = [];
 			$($("#up_menu_signal" + count + " .up_stage_timings_signal").find('input')).each(function(){
 				// console.log($(this).val());
 				timings.push($(this).val());
@@ -99,7 +108,11 @@ $(document).ready(function() {
 				alert("The sum of stage times is not equal to the cycle time");
 				return false;
 			}
+			$($("#up_menu_signal" + count + " .inter_stage_timings_signal").find('input')).each(function(){
+				inter_stage_timings.push($(this).val());
+			});
 			obj.timings = timings;
+			obj.inter_stage_timings = inter_stage_timings;
 			var obj2 = {};
 			var start_signal_scn = $("#up_menu_signal" + count + " .offset_start_signal").val();
 			var end_signal_scn = $("#up_menu_signal" + count + " .offset_end_signal").val();
@@ -400,7 +413,7 @@ $(document).ready(function() {
 			}
 			for (var i = 0; i < plans.length; i++) {
 				if(i == 0){
-					var divs = '<div id="up_menu_signal'+i+'" cycle-time="'+ plans[i].CycleTime +'" class="tab-pane fade active in"><table class="table table-bordered"><thead><tr><td colspan="1">Stage</td><td colspan="1">Time(in seconds)</td></tr></thead><tbody class="up_stage_timings_signal"></tbody></table><h3>Offset Information</h3><div class="offset_info_container_signal'+ i +'"><table class="table table-bordered"><thead><tr><td colspan="1">Signal 1</td><td colspan="1">Signal 2</td><td colspan="1">Offset time(in seconds)</td></tr></thead><tbody>';
+					var divs = '<div id="up_menu_signal'+i+'" cycle-time="'+ plans[i].CycleTime +'" class="tab-pane fade active in"><table class="table table-bordered"><thead><tr><td colspan="1">Stage</td><td colspan="1">Time(in seconds)</td></tr></thead><tbody class="up_stage_timings_signal"></tbody></table><h3>Interstage Timings</h3><table class="table table-bordered"><thead><tr><td colspan="1">Start Stage</td><td colspan="1">End Stage</td><td colspan="1">Time(in seconds)</td></tr></thead><tbody class="inter_stage_timings_signal"></tbody></table><h3>Offset Information</h3><div class="offset_info_container_signal'+ i +'"><table class="table table-bordered"><thead><tr><td colspan="1">Signal 1</td><td colspan="1">Signal 2</td><td colspan="1">Offset time(in seconds)</td></tr></thead><tbody>';
 					for(var j = 0; j < plans[i].Offsets.length; j++)
 						divs += '<tr><td><input type="text" disabled value="'+ plans[i].Offsets[j].Origin_Signal_SCN +'"></td><td><input type="text" disabled value="'+ plans[i].Offsets[j].Destination_Signal_SCN +'"></td><td><input style="width:150px" disabled type="number" value="'+ plans[i].Offsets[j].OffsetTime +'"></td></tr>';
 					divs += '<tr><td><select class="offset_start_signal">' + signalOptions + '</select></td><td><select class="offset_end_signal">' + signalOptions + '</select></td><td><input class="offset_time_signal" style="width:150px" type="number"></td></tr>';
@@ -409,7 +422,7 @@ $(document).ready(function() {
 					$('.up_phases_tabs_signal').append('<li class="active"><a data-toggle="pill" href="#up_menu_signal'+i+'">'+plans[i].PlanSCN+'</a></li>')
 				}
 				else{
-					var divs = '<div id="up_menu_signal'+i+'" cycle-time="'+ plans[i].CycleTime +'" class="tab-pane fade"><table class="table table-bordered"><thead><tr><td colspan="1">Stage</td><td colspan="1">Time(in seconds)</td></tr></thead><tbody class="up_stage_timings_signal"></tbody></table><h3>Offset Information</h3><div class="offset_info_container_signal'+ i +'"><table class="table table-bordered"><thead><tr><td colspan="1">Signal 1</td><td colspan="1">Signal 2</td><td colspan="1">Offset time(in seconds)</td></tr></thead><tbody>';
+					var divs = '<div id="up_menu_signal'+i+'" cycle-time="'+ plans[i].CycleTime +'" class="tab-pane fade"><table class="table table-bordered"><thead><tr><td colspan="1">Stage</td><td colspan="1">Time(in seconds)</td></tr></thead><tbody class="up_stage_timings_signal"></tbody></table><h3>Interstage Timings</h3><table class="table table-bordered"><thead><tr><td colspan="1">Start Stage</td><td colspan="1">End Stage</td><td colspan="1">Time(in seconds)</td></tr></thead><tbody class="inter_stage_timings_signal"></tbody></table><h3>Offset Information</h3><div class="offset_info_container_signal'+ i +'"><table class="table table-bordered"><thead><tr><td colspan="1">Signal 1</td><td colspan="1">Signal 2</td><td colspan="1">Offset time(in seconds)</td></tr></thead><tbody>';
 					for(var j = 0; j < plans[i].Offsets.length; j++)
 						divs += '<tr><td><input type="text" disabled value="'+ plans[i].Offsets[j].Origin_Signal_SCN +'"></td><td><input type="text" disabled value="'+ plans[i].Offsets[j].Destination_Signal_SCN +'"></td><td><input style="width:150px" disabled type="number" value="'+ plans[i].Offsets[j].OffsetTime +'"></td></tr>';
 					divs += '<tr><td><select class="offset_start_signal">' + signalOptions + '</select></td><td><select class="offset_end_signal">' + signalOptions + '</select></td><td><input class="offset_time_signal" style="width:150px" type="number"></td></tr>';
@@ -440,11 +453,18 @@ $(document).ready(function() {
 				var noOfStages = $.parseJSON(result);
 				console.log(noOfStages);
 				var rows = '<tbody class="up_stage_timings_signal">';
+				var rows2 = '<tbody class="inter_stage_timings_signal">'
 				for (var j = 1; j <= noOfStages; j++) {
 					rows += '<tr><td colspan="1">Stage - '+j+'</td><td colspan="1"><input type="number" placeholder="Enter Stage '+j+' Time" class="up_stage_'+j+'"</td></tr>';		
+					if(j != noOfStages)
+						rows2 += '<tr><td colspan="1">Stage - '+j+'</td><td colspan="1">Stage - '+(j+1)+'</td><td colspan="1"><input style="width:150px" type="number" placeholder="Enter Interstage Time" class="inter_stage_'+j+'"</td></tr>';
+					else
+						rows2 += '<tr><td colspan="1">Stage - '+j+'</td><td colspan="1">Stage - '+1+'</td><td colspan="1"><input style="width:150px" type="number" placeholder="Enter Interstage Time" class="inter_stage_'+j+'"</td></tr>';
 				}
 				rows += '</tbody>';
+				rows2 += '</tbody>';
 				$('.up_stage_timings_signal').replaceWith(rows);
+				$('.inter_stage_timings_signal').replaceWith(rows2);
 			}
 		});
 		
@@ -470,17 +490,22 @@ $(document).ready(function() {
 			obj.signal_scn = signal_scn;
 			obj.signal_id = signal_id;
 			var timings = [];
+			var inter_stage_timings = [];
 			var totalTime = 0;
-			$($("#up_menu" + count).find('input')).each(function(){
+			$($("#up_menu" + count + " .up_stage_timings").find('input')).each(function(){
 				timings.push($(this).val());
 				totalTime += parseInt($(this).val());
 			});
-			// console.log(totalTime);
+			$($("#up_menu" + count + " .inter_stage_timings").find('input')).each(function(){
+				inter_stage_timings.push($(this).val());
+			});
+			console.log(inter_stage_timings);
 			if(totalTime != cycle_time){
 				alert("The sum of stage times is not equal to the cycle time");
 				return false;
 			}
 			obj.timings = timings;
+			obj.inter_stage_timings = inter_stage_timings;
 			stages_info.push(obj);
 			count++;
 		});
@@ -551,13 +576,18 @@ $(document).ready(function() {
 				},
 				success: function(result) {
 					var planDetails = jQuery.parseJSON(result)
-					// console.log(planDetails);
+					console.log(planDetails);
 					var count = 0;
 					var count2 = 0;
+					var count4 = 0;
 					$($(".up_phases_tabs_update").find('a')).each(function(){
-						$($("#up_menu_update" + count).find('input')).each(function(){
+						$($("#up_menu_update" + count + " .up_stage_timings").find('input')).each(function(){
 							$(this).val(planDetails.signals[count2].StageTime);
 							count2++;
+						});	
+						$($("#up_menu_update" + count + " .inter_stage_timings").find('input')).each(function(){
+							$(this).val(planDetails.signals[count4].StageTime);
+							count4++;
 						});						
 						count++;
 					});

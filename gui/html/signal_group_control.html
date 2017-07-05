@@ -69,13 +69,13 @@
 			border:none;
 		}
 		.timetable_timings{
-			background-color: orange;
+			background-color: skyblue;
 		}
 		.plan_scns_calendar{
-			background-color: orange;
+			background-color: skyblue;
 		}
 		.plan_scns_event{
-			background-color: orange;
+			background-color: skyblue;
 		}
 		#add_calendar_modal > .modal-dialog > .modal-content{
 			width: 750px;
@@ -162,124 +162,137 @@
   			<li class="active"><a>Signal Group Setup</a></li>
 		</ul>
 	</div>
-	<div class="col-sm-9" id="top_content" style="padding-top:5vh">
-		<div class="row">
-			<div class="col-sm-4">&nbsp;</div>
-			<div class="col-sm-2"><button class="btn btn-danger add_signal_modal" onclick='$("#add_signal_modal").modal()'>Add Signal</button></div>
-			<div class="col-sm-2"><button class="btn btn-danger delete_signal_modal" onclick=delete_signal_modal()>Remove Signal</button></div>
-			<div class="col-sm-4">&nbsp;</div>
+	
+	<div class="col-sm-9">
+	<div class="col-sm-12" style="border-style: solid; border-width: 1px;border-color: #993232">
+		<div class="col-sm-12" id="top_content" style="padding-top:5vh">
+			<div class="row">
+				<div class="col-sm-4">&nbsp;</div>
+				<div class="col-sm-2"><button class="btn btn-danger add_signal_modal" onclick='$("#add_signal_modal").modal()'>Add Signal</button></div>
+				<div class="col-sm-2"><button class="btn btn-danger delete_signal_modal" onclick=delete_signal_modal()>Remove Signal</button></div>
+				<div class="col-sm-4">&nbsp;</div>
+			</div>
 		</div>
-	</div>
-	<div class="col-sm-9" style="padding-top:8vh;">
-		<table class="signal_table table">
-			<thead>
-				<tr>
-					<th colspan="1">&nbsp;</th>
-					<th colspan="2">Sr No.</th>
-					<th colspan="4">Signal SCN</th>
-					<th colspan="4">Signal Description</th>
-				</tr>
-			</thead>
-			<tbody>
-			</tbody>		
-		</table>
+		<div class="col-sm-12" style="padding-top:8vh;">
+			<table class="signal_table table">
+				<thead>
+					<tr>
+						<th colspan="1">&nbsp;</th>
+						<th colspan="2">Sr No.</th>
+						<th colspan="4">Signal SCN</th>
+						<th colspan="4">Signal Description</th>
+					</tr>
+				</thead>
+				<tbody>
+				</tbody>		
+			</table>
+		</div>
 	</div>
 
-	<div class="col-sm-9" id="top_content" style="padding-top:5vh">
-		<div class="row">
-			<div class="col-sm-3">&nbsp;</div>
-			<div class="col-sm-2"><button class="btn btn-danger add_timetable_modal" onclick='$("#add_timetable_modal").modal()'>Add Timetable</button></div>
-			<div class="col-sm-2"><button class="btn btn-danger update_timetable_modal" onclick=update_timetable_modal()>Update Timetable</button></div>
-			<div class="col-sm-2"><button class="btn btn-danger delete_timetable_modal" onclick=delete_timetable_modal()>Delete Timetable</button></div>
-			<div class="col-sm-3">&nbsp;</div>
+	<div class="col-sm-12" style="border-style: solid; border-width: 1px;border-color: #993232">
+		<div class="col-sm-12" id="top_content" style="padding-top:5vh">
+			<div class="row">
+				<div class="col-sm-3">&nbsp;</div>
+				<div class="col-sm-2"><button class="btn btn-danger add_timetable_modal" onclick='$("#add_timetable_modal").modal()'>Add Timetable</button></div>
+				<div class="col-sm-2"><button class="btn btn-danger update_timetable_modal" onclick=update_timetable_modal()>Update Timetable</button></div>
+				<div class="col-sm-2"><button class="btn btn-danger delete_timetable_modal" onclick=delete_timetable_modal()>Delete Timetable</button></div>
+				<div class="col-sm-3">&nbsp;</div>
+			</div>
 		</div>
-	</div>
-	<div class="col-sm-9" style="padding-top:8vh;">
-		<table class="timetable_table table">
-			<thead>
-				<tr>
-					<th colspan="1">&nbsp;</th>
-					<th colspan="2">Sr No.</th>
-					<th colspan="4">Timetable SCN</th>
-					<th colspan="4">Timetable Timings</th>
-				</tr>
-			</thead>
-			<tbody>
-			</tbody>		
-		</table>
+		<div class="col-sm-12" style="padding-top:8vh;">
+			<table class="timetable_table table">
+				<thead>
+					<tr>
+						<th colspan="1">&nbsp;</th>
+						<th colspan="2">Sr No.</th>
+						<th colspan="4">Timetable SCN</th>
+						<th colspan="4">Timetable Timings</th>
+					</tr>
+				</thead>
+				<tbody>
+				</tbody>		
+			</table>
+		</div>
 	</div>
 
-	<div class="col-sm-offset-2 col-sm-9" id="top_content" style="padding-top:5vh">
-		<div class="row">
-			<div class="col-sm-3">&nbsp;</div>
-			<div class="col-sm-2"><button class="btn btn-danger add_timetable_modal" onclick='$("#add_plan_modal").modal()'>Add Plan</button></div>
-			<div class="col-sm-2"><button class="btn btn-danger update_timetable_modal" onclick=update_plan_modal()>Update Plan</button></div>
-			<div class="col-sm-2"><button class="btn btn-danger delete_timetable_modal" onclick=delete_plan_modal()>Delete Plan</button></div>
-			<div class="col-sm-3">&nbsp;</div>
+	<div class="col-sm-12" style="border-style: solid; border-width: 1px;border-color: #993232">
+		<div class="col-sm-12" id="top_content" style="padding-top:5vh">
+			<div class="row">
+				<div class="col-sm-3">&nbsp;</div>
+				<div class="col-sm-2"><button class="btn btn-danger add_timetable_modal" onclick='$("#add_plan_modal").modal()'>Add Plan</button></div>
+				<div class="col-sm-2"><button class="btn btn-danger update_timetable_modal" onclick=update_plan_modal()>Update Plan</button></div>
+				<div class="col-sm-2"><button class="btn btn-danger delete_timetable_modal" onclick=delete_plan_modal()>Delete Plan</button></div>
+				<div class="col-sm-3">&nbsp;</div>
+			</div>
 		</div>
-	</div>
-	<div class="col-sm-offset-2 col-sm-9" style="padding-top:8vh;">
-		<table class="plan_table table">
-			<thead>
-				<tr>
-					<th colspan="1">&nbsp;</th>
-					<th colspan="2">Sr No.</th>
-					<th colspan="4">Plan SCN</th>
-					<th colspan="4">Cycle Time</th>
-				</tr>
-			</thead>
-			<tbody>
-			</tbody>		
-		</table>
+		<div class="col-sm-12" style="padding-top:8vh;">
+			<table class="plan_table table">
+				<thead>
+					<tr>
+						<th colspan="1">&nbsp;</th>
+						<th colspan="2">Sr No.</th>
+						<th colspan="4">Plan SCN</th>
+						<th colspan="4">Cycle Time</th>
+					</tr>
+				</thead>
+				<tbody>
+				</tbody>		
+			</table>
+		</div>
 	</div>
 
-	<div class="col-sm-offset-2 col-sm-9" id="top_content" style="padding-top:5vh">
-		<div class="row">
-			<div class="col-sm-3">&nbsp;</div>
-			<div class="col-sm-2"><button class="btn btn-danger add_calendar_modal" onclick='$("#add_calendar_modal").modal()'>Add Calendar</button></div>
-			<div class="col-sm-2"><button class="btn btn-danger update_calendar_modal" onclick=update_calendar_modal()>Update Calendar</button></div>
-			<div class="col-sm-2"><button class="btn btn-danger delete_calendar_modal" onclick=delete_calendar_modal()>Delete Calendar</button></div>
-			<div class="col-sm-3">&nbsp;</div>
+	<div class="col-sm-12" style="border-style: solid; border-width: 1px;border-color: #993232">
+		<div class="col-sm-12" id="top_content" style="padding-top:5vh">
+			<div class="row">
+				<div class="col-sm-3">&nbsp;</div>
+				<div class="col-sm-2"><button class="btn btn-danger add_calendar_modal" onclick='$("#add_calendar_modal").modal()'>Add Calendar</button></div>
+				<div class="col-sm-2"><button class="btn btn-danger update_calendar_modal" onclick=update_calendar_modal()>Update Calendar</button></div>
+				<div class="col-sm-2"><button class="btn btn-danger delete_calendar_modal" onclick=delete_calendar_modal()>Delete Calendar</button></div>
+				<div class="col-sm-3">&nbsp;</div>
+			</div>
 		</div>
-	</div>
-	<div class="col-sm-offset-2 col-sm-9" style="padding-top:8vh;">
-		<table class="calendar_table table">
-			<thead>
-				<tr>
-					<th colspan="2">Sr No.</th>
-					<th colspan="4">Day</th>
-					<th colspan="4">Timetable SCN</th>
-					<th colspan="4">Plan SCNs</th>
-				</tr>
-			</thead>
-			<tbody>
-			</tbody>		
-		</table>
+		<div class="col-sm-12" style="padding-top:8vh;">
+			<table class="calendar_table table">
+				<thead>
+					<tr>
+						<th colspan="2">Sr No.</th>
+						<th colspan="4">Day</th>
+						<th colspan="4">Timetable SCN</th>
+						<th colspan="4">Plan SCNs</th>
+					</tr>
+				</thead>
+				<tbody>
+				</tbody>		
+			</table>
+		</div>
 	</div>
 
-	<div class="col-sm-offset-2 col-sm-9" id="top_content" style="padding-top:5vh">
-		<div class="row">
-			<div class="col-sm-3">&nbsp;</div>
-			<div class="col-sm-2"><button class="btn btn-danger add_event_modal" onclick='$("#add_event_modal").modal()'>Add Event</button></div>
-			<div class="col-sm-2"><button class="btn btn-danger update_event_modal" onclick=update_event_modal()>Update Event</button></div>
-			<div class="col-sm-2"><button class="btn btn-danger delete_event_modal" onclick=delete_event_modal()>Delete Event</button></div>
-			<div class="col-sm-3">&nbsp;</div>
+	<div class="col-sm-12" style="border-style: solid; border-width: 1px;border-color: #993232">
+		<div class="col-sm-12" id="top_content" style="padding-top:5vh">
+			<div class="row">
+				<div class="col-sm-3">&nbsp;</div>
+				<div class="col-sm-2"><button class="btn btn-danger add_event_modal" onclick='$("#add_event_modal").modal()'>Add Event</button></div>
+				<div class="col-sm-2"><button class="btn btn-danger update_event_modal" onclick=update_event_modal()>Update Event</button></div>
+				<div class="col-sm-2"><button class="btn btn-danger delete_event_modal" onclick=delete_event_modal()>Delete Event</button></div>
+				<div class="col-sm-3">&nbsp;</div>
+			</div>
+		</div>
+		<div class="col-sm-12" style="padding-top:8vh;">
+			<table class="event_table table">
+				<thead>
+					<tr>
+						<th colspan="1">&nbsp;</th>
+						<th colspan="2">Sr No.</th>
+						<th colspan="4">Event Date</th>
+						<th colspan="4">Timetable SCN</th>
+						<th colspan="4">Plan SCNs</th>
+					</tr>
+				</thead>
+				<tbody>
+				</tbody>		
+			</table>
 		</div>
 	</div>
-	<div class="col-sm-offset-2 col-sm-9" style="padding-top:8vh;">
-		<table class="event_table table">
-			<thead>
-				<tr>
-					<th colspan="1">&nbsp;</th>
-					<th colspan="2">Sr No.</th>
-					<th colspan="4">Event Date</th>
-					<th colspan="4">Timetable SCN</th>
-					<th colspan="4">Plan SCNs</th>
-				</tr>
-			</thead>
-			<tbody>
-			</tbody>		
-		</table>
 	</div>
 
 	</div><br><br><br><br><br>
@@ -445,23 +458,7 @@
 					<br>
 					<div class="tab-content up_tab"></div>
 					<h3>Offset Information</h3>
-					<div class="offset_info_container"></div>
-					<!-- <table class="table table-bordered">
-						<thead>
-							<tr>
-								<td colspan="1">Plan Number</td>
-								<td colspan="2">Start Time</td>
-								<td colspan="2">End Time</td>
-							</tr>
-						</thead>
-						<tbody class="plan_config_body">
-							<tr>
-								<td colspan="1">1</td>
-								<td colspan="2"><select class="time"></select></td>
-								<td colspan="2"><select class="time"></select></td>
-							</tr>
-						</tbody>
-					</table> -->
+					<div class="offset_info_container"></div>					
 					<button class="btn btn-danger add_plan">Add Plan</button>
 				</div>
 				<br><br><br>
