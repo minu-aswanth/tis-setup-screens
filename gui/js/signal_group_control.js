@@ -586,7 +586,7 @@ $(document).ready(function() {
 							count2++;
 						});	
 						$($("#up_menu_update" + count + " .inter_stage_timings").find('input')).each(function(){
-							$(this).val(planDetails.signals[count4].StageTime);
+							$(this).val(planDetails.signals[count4].inter_stage_timings);
 							count4++;
 						});						
 						count++;
